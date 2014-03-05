@@ -13,14 +13,14 @@
 #include "Bot.h"
 #include "TCPThread.h"
 
-//#define _USE_LIVE_VIDEO
+#define _USE_LIVE_VIDEO
 
 class testApp : public ofBaseApp{
 public:
     void setup();
     void update();
     void draw();
-    
+
     void exit();
 
     void keyPressed(int key);
@@ -44,32 +44,32 @@ public:
     ofxCvGrayscaleImage grayImage;
     ofxCvGrayscaleImage grayBg;
     ofxCvGrayscaleImage grayDiff;
-    
+
     ofxCvColorImage     displayedImage;
     ofxCvContourFinder 	contourFinder;
 
     bool				bLearnBakground;
-    
-    
+
+
     string              label;
-    
+
     ofColor             colors[18];
     ofColor             reticlColor;
     ofPoint             mouse_point;
     map<int, Bot>       bots;
     vector<ofxCvBlob>   blobs;
-    
+
     ofPoint             botIDLocation,
                         botRectLocation,
                         botCoordLocation,
                         botPathLocation;
     ofVec2f             vidSize;
-    
+
     void                drawPath(vector<ofPoint>& path);
     void                drawInfoStrings(string s,
                                         ofPoint& info);
     void                drawAssociation(ofPoint& botCenter, ofPoint& pt);
-    
+
     int                 offset,
                         potential_bot_id,
                         reticleRotationNum,
@@ -78,12 +78,12 @@ public:
     vector<int>         black_list;
     //--------------------------------------------------------------
     bool                showGUI;
-    
+
     ofxIntSlider        thresholdSlider,
                         dilateSlider,
                         minimunThreshSlider,
                         maximunThreshSlider;
-    
+
     ofxToggle           drawBotRectToggle,
                         drawBotIDToggle,
                         drawBotPathToggle,
@@ -91,29 +91,29 @@ public:
                         drawReportStringToggle,
                         autoFindBots,
                         showReticle;
-    
+
     ofxButton           showColorImage,
                         showBackgroundImage,
                         showSubtractedImage,
                         showGrayImage;
-            
+
     ofxLabel            alterationsLabel,
                         infoLabel,
                         imageLabel;
-    
-    
+
+
     ofxPanel            gui;
 
     void                showColorPressed();
     void                showBGPressed();
     void                showGrayPressed();
     void                showSubtractedPressed();
-    
+
     int                 vidID;
-    
+
     //--------------------------------------------------------------
     TCPThread tcpThread;
     ofxOscSender sender;
     int portNumber;
-    
+
 };
