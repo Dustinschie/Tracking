@@ -42,14 +42,14 @@ void testApp::setup(){
 	#endif
 
     //  add many colors to vector for random assignment later
-    colors[0] = ofColor::lightBlue;
+    colors[0] = ofColor::green;
     colors[1] =ofColor::aqua;
     colors[2] =ofColor::maroon;
     colors[3] =ofColor::lightCoral;
     
     colors[4] =ofColor::cyan;
     colors[5] =ofColor::red;
-    colors[6] =ofColor::green;
+    colors[6] =ofColor::lightBlue;
     colors[7] =ofColor::salmon;
     colors[8] =ofColor::blueViolet;
     colors[9] =ofColor::hotPink;
@@ -193,13 +193,7 @@ void testApp::update(){
                     potential_bot_id++;
                 }
             }
-            reticlColor = ofColor::white;
-            for (map<int, Bot>::iterator bot_it = bots.begin(); bot_it != bots.end(); bot_it++) {
-                if (bot_it->second.rect.inside(mouse_point)) {
-                    reticlColor = bot_it->second.color;
-                    break;
-                }
-            }
+
             
         }
 	}
@@ -299,22 +293,49 @@ void testApp::draw(){
     if(showReticle && !showGUI){
         //  Draw spinning part of reticle
         ofPushMatrix();
-            ofNoFill();
+//            ofNoFill();
             ofSetColor(reticlColor);
-            ofSetLineWidth(20);
             ofTranslate(mouse_point);
-            ofRotateZ(reticleRotationNum);
-            ofCircle(0,0, 30);
-        ofPopMatrix();
         
-        ofSetColor(ofColor::white);
+            ofRotateZ(reticleRotationNum);
+            int x = 20,
+                y = 20,
+                x2 = 25,
+                y2 = 25,
+                n = 5,
+                r = 25;
+            ofFill();
+            for (int i = 0; i < n; i++)
+                ofCircle(r * cos(2 * pi * i / n), r * sin(2 * pi * i / n), 4);
+        
+            ofSetPolyMode(OF_POLY_WINDING_ODD);	// this is the normal mode
+            ofBeginShape();
+//            ofNoFill();
+            for (int i = 0; i < n; i++)
+                ofVertex((r + 5) * cos(2 * pi * i / 5), (r + 5) * sin(2 * pi * i / 5));
+            ofNextContour(true);
+            for (int i = 0; i < 20; i++){
+                 ofVertex(r * cos(2 * pi * i / 20), r * sin(2 * pi * i / 20));
+		}
+            ofEndShape(true);
+        
+        ofNoFill();
+        ofCircle(0, 0, 25);
+        ofPopMatrix();
+    
         reticleRotationNum = (reticleRotationNum + 1) % 360;
         //  draw crosshair
-        ofSetLineWidth(3);
-        ofLine(mouse_point.x + 20, mouse_point.y, mouse_point.x + 5, mouse_point.y);
-        ofLine(mouse_point.x - 20, mouse_point.y, mouse_point.x - 5, mouse_point.y);
-        ofLine(mouse_point.x, mouse_point.y - 5, mouse_point.x, mouse_point.y - 20);
-        ofLine(mouse_point.x, mouse_point.y + 5, mouse_point.x, mouse_point.y + 20);
+        ofNoFill();
+        ofSetLineWidth(2);
+        ofPushMatrix();
+            ofTranslate(mouse_point);
+            ofRotateZ(-reticleRotationNum);
+            ofLine( x2, 0, 5,  0);
+            ofLine(-x2, 0,-5,  0);
+            ofLine(  0,-5, 0,-x2);
+            ofLine(  0, 5, 0, x2);
+        ofPopMatrix();
+        ofSetColor(ofColor::white);
         ofCircle(mouse_point, 5);
     }
     
@@ -360,6 +381,13 @@ void testApp::keyReleased(int key){
 void testApp::mouseMoved(int x, int y ){
     mouse_point.x = x;
     mouse_point.y = y;
+    reticlColor = ofColor::white;
+    for (map<int, Bot>::iterator bot_it = bots.begin(); bot_it != bots.end(); bot_it++) {
+        if (bot_it->second.rect.inside(mouse_point)) {
+            reticlColor = bot_it->second.color;
+            break;
+        }
+    }
 }
 
 //--------------------------------------------------------------
