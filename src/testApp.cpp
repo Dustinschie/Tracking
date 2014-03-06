@@ -3,6 +3,7 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofEnableAntiAliasing();
     //  set Video Size
     vidSize = ofVec2f(640, 480);
     
@@ -312,18 +313,19 @@ void testApp::draw(){
                 ofVertex((r + 5) * cos(2 * pi * i / 5), (r + 5) * sin(2 * pi * i / 5));
             ofNextContour(true);
             for (int i = 0; i < 20; i++){
-                 ofVertex(r * cos(2 * pi * i / 20), r * sin(2 * pi * i / 20));
-		}
-            ofEndShape(true);
+                 ofVertex((r + 1)* cos(2 * pi * i / 20), (r + 1) * sin(2 * pi * i / 20));
+            }
+            ofEndShape(false);
         
         ofNoFill();
-        ofCircle(0, 0, 25);
+//        ofCircle(0, 0, 25);
         ofPopMatrix();
     
         reticleRotationNum = (reticleRotationNum + 1) % 360;
         //  draw crosshair
         ofNoFill();
         ofSetLineWidth(2);
+<<<<<<< HEAD
         ofPushMatrix();
             ofTranslate(mouse_point);
             ofRotateZ(-reticleRotationNum / 2);
@@ -332,8 +334,10 @@ void testApp::draw(){
             ofLine(  0,-5, 0,-x2);
             ofLine(  0, 5, 0, x2);
         ofPopMatrix();
+=======
+>>>>>>> FETCH_HEAD
         ofSetColor(ofColor::white);
-        ofCircle(mouse_point, 5);
+        ofCircle(mouse_point, 10);
     }
     
     //  Draw the label
