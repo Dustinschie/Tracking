@@ -291,26 +291,23 @@ void testApp::draw(){
     }
     
     if(showReticle && !showGUI){
+        int x = 20,
+        x2 = 25,
+        n = 5,
+        r = 25;
         //  Draw spinning part of reticle
         ofPushMatrix();
-//            ofNoFill();
             ofSetColor(reticlColor);
             ofTranslate(mouse_point);
         
             ofRotateZ(reticleRotationNum);
-            int x = 20,
-                y = 20,
-                x2 = 25,
-                y2 = 25,
-                n = 5,
-                r = 25;
+
             ofFill();
             for (int i = 0; i < n; i++)
                 ofCircle(r * cos(2 * pi * i / n), r * sin(2 * pi * i / n), 4);
         
             ofSetPolyMode(OF_POLY_WINDING_ODD);	// this is the normal mode
             ofBeginShape();
-//            ofNoFill();
             for (int i = 0; i < n; i++)
                 ofVertex((r + 5) * cos(2 * pi * i / 5), (r + 5) * sin(2 * pi * i / 5));
             ofNextContour(true);
@@ -329,7 +326,7 @@ void testApp::draw(){
         ofSetLineWidth(2);
         ofPushMatrix();
             ofTranslate(mouse_point);
-            ofRotateZ(-reticleRotationNum);
+            ofRotateZ(-reticleRotationNum / 2);
             ofLine( x2, 0, 5,  0);
             ofLine(-x2, 0,-5,  0);
             ofLine(  0,-5, 0,-x2);
@@ -429,12 +426,6 @@ void testApp::gotMessage(ofMessage msg){
 void testApp::dragEvent(ofDragInfo dragInfo){ 
     
 }
-
-
-
-
-
-
 
 //--------------------------------------------------------------
 void testApp::showColorPressed(){
