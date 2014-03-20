@@ -3,6 +3,7 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofEnableAntiAliasing();
     //  set Video Size
     vidSize = ofVec2f(640, 480);
 
@@ -291,52 +292,59 @@ void testApp::draw(){
     }
 
     if(showReticle && !showGUI){
+        int x = 20,
+        x2 = 25,
+        n = 5,
+        r = 25;
         //  Draw spinning part of reticle
         ofPushMatrix();
-//            ofNoFill();
             ofSetColor(reticlColor);
             ofTranslate(mouse_point);
 
             ofRotateZ(reticleRotationNum);
-            int x = 20,
-                y = 20,
-                x2 = 25,
-                y2 = 25,
-                n = 5,
-                r = 25;
+
             ofFill();
             for (int i = 0; i < n; i++)
                 ofCircle(r * cos(2 * PI * i / n), r * sin(2 * PI * i / n), 4);
 
             ofSetPolyMode(OF_POLY_WINDING_ODD);	// this is the normal mode
             ofBeginShape();
-//            ofNoFill();
             for (int i = 0; i < n; i++)
                 ofVertex((r + 5) * cos(2 * PI * i / 5), (r + 5) * sin(2 * PI * i / 5));
             ofNextContour(true);
             for (int i = 0; i < 20; i++){
+<<<<<<< HEAD
                  ofVertex(r * cos(2 * PI * i / 20), r * sin(2 * PI * i / 20));
 		}
             ofEndShape(true);
 
+=======
+                 ofVertex((r + 1)* cos(2 * pi * i / 20), (r + 1) * sin(2 * pi * i / 20));
+            }
+            ofEndShape(false);
+        
+>>>>>>> upstream/master
         ofNoFill();
-        ofCircle(0, 0, 25);
+//        ofCircle(0, 0, 25);
         ofPopMatrix();
 
         reticleRotationNum = (reticleRotationNum + 1) % 360;
         //  draw crosshair
         ofNoFill();
         ofSetLineWidth(2);
+<<<<<<< HEAD
         ofPushMatrix();
             ofTranslate(mouse_point);
-            ofRotateZ(-reticleRotationNum);
+            ofRotateZ(-reticleRotationNum / 2);
             ofLine( x2, 0, 5,  0);
             ofLine(-x2, 0,-5,  0);
             ofLine(  0,-5, 0,-x2);
             ofLine(  0, 5, 0, x2);
         ofPopMatrix();
+=======
+>>>>>>> FETCH_HEAD
         ofSetColor(ofColor::white);
-        ofCircle(mouse_point, 5);
+        ofCircle(mouse_point, 10);
     }
 
     //  Draw the label
@@ -429,12 +437,6 @@ void testApp::gotMessage(ofMessage msg){
 void testApp::dragEvent(ofDragInfo dragInfo){
 
 }
-
-
-
-
-
-
 
 //--------------------------------------------------------------
 void testApp::showColorPressed(){
