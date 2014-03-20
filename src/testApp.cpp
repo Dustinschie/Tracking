@@ -5,7 +5,7 @@
 void testApp::setup(){
     //  set Video Size
     vidSize = ofVec2f(640, 480);
-    
+
     //  initialize mouse point
     mouse_point = ofPoint(0,0);
     //  intialize video ID
@@ -18,9 +18,9 @@ void testApp::setup(){
     reticlColor = ofColor::white;
     //  initialized bot color number
     botColorNum = 0;
-    
+
 	#ifdef _USE_LIVE_VIDEO
-    
+
         vidGrabber.setVerbose(true);
         vidGrabber.initGrabber(vidSize.x,vidSize.y);
         colorImg.allocate(vidSize.x,vidSize.y);
@@ -28,8 +28,8 @@ void testApp::setup(){
         grayBg.allocate(vidSize.x,vidSize.y);
         grayDiff.allocate(vidSize.x,vidSize.y);
         ofSetWindowShape(vidSize.x,vidSize.y);
-    
-    
+
+
 	#else
         vidPlayer.loadMovie("../GridDetectionNoText.mov");
         vidPlayer.play();
@@ -46,7 +46,7 @@ void testApp::setup(){
     colors[1] =ofColor::aqua;
     colors[2] =ofColor::maroon;
     colors[3] =ofColor::lightCoral;
-    
+
     colors[4] =ofColor::cyan;
     colors[5] =ofColor::red;
     colors[6] =ofColor::lightBlue;
@@ -62,16 +62,16 @@ void testApp::setup(){
     colors[16] =ofColor::crimson;
     colors[17] =ofColor::purple;
 
-    
+
 	bLearnBakground = true;
-    
+
     // GUI setup
     gui.setup();
     gui.add(alterationsLabel.setup("Alternations\n", ""));
     gui.add(thresholdSlider.setup("Threshold", 45, 0, 255));
     gui.add(dilateSlider.setup("Dilation", 4, 0, 20));
     gui.add(autoFindBots.setup("Auto Find", false));
-    
+
     gui.add(infoLabel.setup("Displayed Information\n", ""));
     gui.add(showReticle.setup("Show Reticle", true));
     gui.add(drawReportStringToggle.setup("Info Table", true));
@@ -79,23 +79,23 @@ void testApp::setup(){
     gui.add(drawBotIDToggle.setup("ID", false));
     gui.add(drawBotPathToggle.setup("Path", false));
     gui.add(drawAssociationToggle.setup("Association", true));
-    
+
     gui.add(imageLabel.setup("Image\n", ""));
     gui.add(showColorImage.setup("Show Color"));
     gui.add(showGrayImage.setup("Show Gray"));
     gui.add(showSubtractedImage.setup("Show Subtracted Image"));
     gui.add(showBackgroundImage.setup("Show Background"));
-    
+
     showColorImage.addListener(this, &testApp::showColorPressed);
     showGrayImage.addListener(this, &testApp::showGrayPressed);
     showBackgroundImage.addListener(this, &testApp::showBGPressed);
     showSubtractedImage.addListener(this, &testApp::showSubtractedPressed);
-    
+
     showGUI = false;
-    
+
     //  TCP server thread setup
     tcpThread.start();
-    
+
     //  start sender
     portNumber = 11235;
     sender.setup("localhost", portNumber);
@@ -131,21 +131,21 @@ void testApp::update(){
 		// take the abs value of the difference between background and incoming and then threshold:
 		grayDiff.absDiff(grayBg, grayImage);
 		grayDiff.threshold(thresholdSlider);
-        
+
         //  dilate the blobs on the screen; compensating for blob-splitting by lines on grid
         for (int i = 0; i < dilateSlider; i++)
             grayDiff.dilate_3x3();
-        
+
 		// find contours which are between the size of 1/300 pixels and 1/3 the w*h pixels.
 		contourFinder.findContours(grayDiff,
                                    (colorImg.height * colorImg.width)/300,
                                    (colorImg.height * colorImg.width)/3,
                                    10,
                                    false);	// find bots
-        
+
         //  get all the blobs found in the contourFinder
         blobs = vector<ofxCvBlob>(contourFinder.blobs.begin(), contourFinder.blobs.end());
-        
+
         //  if the contourFinder didn't find any blobs, remove all the bots stored.
         if (blobs.size() == 0){
             bots.clear();
@@ -171,14 +171,14 @@ void testApp::update(){
                 //  push key to bot that no longer exist
                 black_list.push_back(it->first);
             }
-            
+
             bool clearAll = false;
             //  if there are any keys in black_list, remove them from bots map
             for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++){
                 bots.erase(*it);
                 clearAll = true;
             }
-            
+
             if (clearAll) {
                 ofxOscMessage msg;
                 msg.setAddress("/clear");
@@ -194,7 +194,7 @@ void testApp::update(){
                 }
             }
 
-            
+
         }
 	}
     switch (vidID) {
@@ -237,19 +237,19 @@ void testApp::draw(){
         reportStr.str("");
     }
 
-    
+
     ofPoint bot_center_pt,
             info(displayedImage.width, 100);
-    
+
     //  iterate through all the bots
     for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++) {
         ofSetColor(it->second.color);
-        
+
         //  draw path of bot
         if (drawBotPathToggle)
             drawPath(it->second.path);
-        
-      
+
+
         //  draw blob and bounding rectangle
         if (drawBotRectToggle){
             ofNoFill();
@@ -257,11 +257,11 @@ void testApp::draw(){
             ofRect(it->second.rect);
             it->second.get_blob().draw();
         }
-        
-        
-        
+
+
+
         ofFill();
-        
+
         //  create point at location of corresponding information tuple
         bot_center_pt = it->second.get_center();
         //  add bot information to string stream
@@ -289,14 +289,14 @@ void testApp::draw(){
         gui.setPosition(0, 0);
         gui.draw();
     }
-    
+
     if(showReticle && !showGUI){
         //  Draw spinning part of reticle
         ofPushMatrix();
 //            ofNoFill();
             ofSetColor(reticlColor);
             ofTranslate(mouse_point);
-        
+
             ofRotateZ(reticleRotationNum);
             int x = 20,
                 y = 20,
@@ -306,23 +306,23 @@ void testApp::draw(){
                 r = 25;
             ofFill();
             for (int i = 0; i < n; i++)
-                ofCircle(r * cos(2 * pi * i / n), r * sin(2 * pi * i / n), 4);
-        
+                ofCircle(r * cos(2 * PI * i / n), r * sin(2 * PI * i / n), 4);
+
             ofSetPolyMode(OF_POLY_WINDING_ODD);	// this is the normal mode
             ofBeginShape();
 //            ofNoFill();
             for (int i = 0; i < n; i++)
-                ofVertex((r + 5) * cos(2 * pi * i / 5), (r + 5) * sin(2 * pi * i / 5));
+                ofVertex((r + 5) * cos(2 * PI * i / 5), (r + 5) * sin(2 * PI * i / 5));
             ofNextContour(true);
             for (int i = 0; i < 20; i++){
-                 ofVertex(r * cos(2 * pi * i / 20), r * sin(2 * pi * i / 20));
+                 ofVertex(r * cos(2 * PI * i / 20), r * sin(2 * PI * i / 20));
 		}
             ofEndShape(true);
-        
+
         ofNoFill();
         ofCircle(0, 0, 25);
         ofPopMatrix();
-    
+
         reticleRotationNum = (reticleRotationNum + 1) % 360;
         //  draw crosshair
         ofNoFill();
@@ -338,11 +338,11 @@ void testApp::draw(){
         ofSetColor(ofColor::white);
         ofCircle(mouse_point, 5);
     }
-    
+
     //  Draw the label
     ofSetColor(ofColor::silver, 100);
     ofDrawBitmapString(label, 0, 10);
-	
+
 	ofSetHexColor(0xffffff);
 }
 
@@ -355,7 +355,7 @@ void testApp::exit(){
     cout << "listeners removed" << endl;
     tcpThread.stop();
     cout << "TCP Server stopped" << endl;
-    
+
 }
 
 
@@ -426,8 +426,8 @@ void testApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
-    
+void testApp::dragEvent(ofDragInfo dragInfo){
+
 }
 
 
