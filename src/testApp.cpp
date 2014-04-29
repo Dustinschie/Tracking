@@ -6,7 +6,7 @@ void testApp::setup(){
     ofEnableAntiAliasing();
     //  set Video Size
     vidSize = ofVec2f(640, 480);
-
+    ofSetFrameRate(30);
     //  initialize mouse point
     mouse_point = ofPoint(0,0);
     //  intialize video ID
@@ -135,7 +135,9 @@ void testApp::update(){
 
         //  dilate the blobs on the screen; compensating for blob-splitting by lines on grid
         for (int i = 0; i < dilateSlider; i++)
-            grayDiff.dilate_3x3();
+            grayDiff.dilate();
+//        for (int i = 0; i < dilateSlider / 2; i++)
+//            grayDiff.erode();
 
 		// find contours which are between the size of 1/300 pixels and 1/3 the w*h pixels.
 		contourFinder.findContours(grayDiff,
@@ -296,44 +298,12 @@ void testApp::draw(){
         x2 = 25,
         n = 5,
         r = 25;
-        //  Draw spinning part of reticle
-        ofPushMatrix();
-            ofSetColor(reticlColor);
-            ofTranslate(mouse_point);
-
-            ofRotateZ(reticleRotationNum);
-
-            ofFill();
-            for (int i = 0; i < n; i++)
-                ofCircle(r * cos(2 * PI * i / n), r * sin(2 * PI * i / n), 4);
-
-            ofSetPolyMode(OF_POLY_WINDING_ODD);	// this is the normal mode
-            ofBeginShape();
-                for (int i = 0; i < n; i++)
-                    ofVertex((r + 5) * cos(2 * PI * i / 5), (r + 5) * sin(2 * PI * i / 5));
-                ofNextContour(true);
-                for (int i = 0; i < 20; i++){
-                     ofVertex((r + 1)* cos(2 * pi * i / 20), (r + 1) * sin(2 * pi * i / 20));
-                }
-            ofEndShape(false);
-            ofNoFill();
-            ofCircle(0, 0, 25);
-        ofPopMatrix();
+        ofSetColor(reticlColor);
+        ofSetLineWidth(5);
+        ofNoFill();
+        ofCircle(mouse_point.x, mouse_point.y, 30);
 
         reticleRotationNum = (reticleRotationNum + 1) % 360;
-        //  draw crosshair
-        ofNoFill();
-        ofSetLineWidth(2);
-        ofPushMatrix();
-            ofTranslate(mouse_point);
-            ofRotateZ(-reticleRotationNum / 2);
-            ofLine( x2, 0, 5,  0);
-            ofLine(-x2, 0,-5,  0);
-            ofLine(  0,-5, 0,-x2);
-            ofLine(  0, 5, 0, x2);
-        ofPopMatrix();
-        ofSetColor(ofColor::white);
-        ofCircle(mouse_point, 5);
     }
 
     //  Draw the label

@@ -36,6 +36,7 @@ public:
     map<long, info> timed_data;
     ofColor color;
         ofRectangle rect;
+    
 private:
     int my_id;
     ofVec2f centroid;

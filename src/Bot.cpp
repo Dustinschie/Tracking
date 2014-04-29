@@ -12,6 +12,7 @@ Bot::Bot(int bot_id){
     color.r = ofRandom(255);
     color.g = ofRandom(255);
     color.b = ofRandom(255);
+    
 }
 
 //--------------------------------------------------------------
@@ -49,6 +50,7 @@ int Bot::update_position(vector<ofxCvBlob>& blobs){
             path.push_back(it->centroid);
             
              long time = ofGetElapsedTimeMillis() / 1000;
+            
             timed_data.insert(pair< long, info>(time, info()));
             timed_data[time].centroid = blob.centroid;
             if (timed_data.size() > 1) {
@@ -62,6 +64,9 @@ int Bot::update_position(vector<ofxCvBlob>& blobs){
                 angle = timed_data[time].angle;
                 velocity = timed_data[time].velocity;
                 centroid = timed_data[time].centroid;
+                if (timed_data.size() > 2) {
+                    timed_data.erase(timed_data.begin());
+                }
             }
             else{
                 timed_data[time].direction = "N/A";
