@@ -43,6 +43,7 @@ void Bot::update_position(ofxCvBlob& a_blob){
 
 //--------------------------------------------------------------
 int Bot::update_position(vector<ofxCvBlob>& blobs){
+    
     for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++) {
         if (rect.inside(it->centroid)) {
             blob = *it;
@@ -51,9 +52,10 @@ int Bot::update_position(vector<ofxCvBlob>& blobs){
             
              long time = ofGetElapsedTimeMillis() / 1000;
             
-            timed_data.insert(pair< long, info>(time, info()));
-            timed_data[time].centroid = blob.centroid;
-            if (timed_data.size() > 1) {
+            
+            if (timed_data.size() >= 1) {
+                timed_data.insert(pair< long, info>(time, info()));
+                timed_data[time].centroid = blob.centroid;
                 map< long, info>::reverse_iterator map_it = timed_data.rbegin();
                 map_it--;
                 ofVec2f pt(blob.centroid.x, blob.centroid.y);

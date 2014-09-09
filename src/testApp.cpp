@@ -157,46 +157,49 @@ void testApp::update(){
         }
 
         else{
-            //  vector iterator that will contain the pointer to the beginning of blobs
-            vector<ofxCvBlob>::iterator vect_it;
-            //  remove any elements that may resise in black_list
-            black_list.clear();
-            //  updated the positions of the blobs
-            for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++) {
-                //  this will contain the offset of one pointer to the pointer of first element
-                offset = it->second.update_position(blobs);
-                vect_it = blobs.begin();
-                std::advance(vect_it, offset);
-                if (offset != -1){
-                    blobs.erase(vect_it);
-                    continue;
+            long time = ofGetElapsedTimeMillis() / 1000;
+            if (time - prev_time >= 0) {
+                prev_time = time;
+                //  vector iterator that will contain the pointer to the beginning of blobs
+                vector<ofxCvBlob>::iterator vect_it;
+                //  remove any elements that may resise in black_list
+                black_list.clear();
+                //  updated the positions of the blobs
+                for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++) {
+                    //  this will contain the offset of one pointer to the pointer of first element
+                    offset = it->second.update_position(blobs);
+                    vect_it = blobs.begin();
+                    std::advance(vect_it, offset);
+                    if (offset != -1){
+                        blobs.erase(vect_it);
+                        continue;
+                    }
+                    //  push key to bot that no longer exist
+                    black_list.push_back(it->first);
                 }
-                //  push key to bot that no longer exist
-                black_list.push_back(it->first);
-            }
 
-            bool clearAll = false;
-            //  if there are any keys in black_list, remove them from bots map
-            for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++){
-                bots.erase(*it);
-                clearAll = true;
-            }
+                bool clearAll = false;
+                //  if there are any keys in black_list, remove them from bots map
+                for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++){
+                    bots.erase(*it);
+                    clearAll = true;
+                }
 
-            if (clearAll) {
-                ofxOscMessage msg;
-                msg.setAddress("/clear");
-                msg.addStringArg("bye");
-                sender.sendMessage(msg);
-            }
-            if (autoFindBots) {
-                //  insert newly-found blobs, if there are any
-                for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++){
-                    bots.insert(pair<int, Bot>(potential_bot_id, Bot(*it, potential_bot_id, colors[botColorNum])));
-                    botColorNum = (botColorNum + 1) % 18;
-                    potential_bot_id++;
+                if (clearAll) {
+                    ofxOscMessage msg;
+                    msg.setAddress("/clear");
+                    msg.addStringArg("bye");
+                    sender.sendMessage(msg);
+                }
+                if (autoFindBots) {
+                    //  insert newly-found blobs, if there are any
+                    for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++){
+                        bots.insert(pair<int, Bot>(potential_bot_id, Bot(*it, potential_bot_id, colors[botColorNum])));
+                        botColorNum = (botColorNum + 1) % 18;
+                        potential_bot_id++;
+                    }
                 }
             }
-
 
         }
 	}

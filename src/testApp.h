@@ -3,15 +3,11 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 #include "ofxGui.h"
-#include "ofxNetwork.h"
-#include "ofxOscMessage.h"
-
 #include <vector>
 #include <sstream>
 #include <map>
 
 #include "Bot.h"
-#include "TCPThread.h"
 
 //#define _USE_LIVE_VIDEO
 
@@ -110,10 +106,5 @@ public:
     void                showSubtractedPressed();
 
     int                 vidID;
-
-    //--------------------------------------------------------------
-    TCPThread tcpThread;
-    ofxOscSender sender;
-    int portNumber;
-
+    long                prev_time = 0;
 };
