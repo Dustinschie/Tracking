@@ -8,6 +8,7 @@
 #include <map>
 
 #include "Bot.h"
+#include "ZMQThreadedObject.h"
 
 //#define _USE_LIVE_VIDEO
 
@@ -50,7 +51,6 @@ public:
     string              label;
 
     ofColor             colors[18];
-    ofColor             reticlColor;
     ofPoint             mouse_point;
     map<int, Bot>       bots;
     vector<ofxCvBlob>   blobs;
@@ -61,17 +61,20 @@ public:
                         botPathLocation;
     ofVec2f             vidSize;
 
-    void                drawPath(vector<ofPoint>& path);
     void                drawInfoStrings(string s,
                                         ofPoint& info);
     void                drawAssociation(ofPoint& botCenter, ofPoint& pt);
 
     int                 offset,
                         potential_bot_id,
-                        reticleRotationNum,
                         botColorNum;
     //  vector that will contain the keys to bots that no longer exist
     vector<int>         black_list;
+    
+    
+    ofPolyline          line;
+    
+    ZMQThreadedObject   zmqThread;
     //--------------------------------------------------------------
     bool                showGUI;
 
@@ -85,8 +88,7 @@ public:
                         drawBotPathToggle,
                         drawAssociationToggle,
                         drawReportStringToggle,
-                        autoFindBots,
-                        showReticle;
+                        autoFindBots;
 
     ofxButton           showColorImage,
                         showBackgroundImage,
@@ -106,5 +108,5 @@ public:
     void                showSubtractedPressed();
 
     int                 vidID;
-    long                prev_time = 0;
+    unsigned int        timeStamp;
 };

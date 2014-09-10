@@ -2,7 +2,8 @@
 
 
 //--------------------------------------------------------------
-void testApp::setup(){
+void testApp::setup()
+{
     ofEnableAntiAliasing();
     //  set Video Size
     vidSize = ofVec2f(640, 480);
@@ -13,13 +14,15 @@ void testApp::setup(){
     vidID = 0;
     //  initialize next Bot ID
     potential_bot_id = 0;
-    //  initialize reticle rotation nuumber
-    reticleRotationNum = 1;
-    //  initialize reticle color
-    reticlColor = ofColor::white;
     //  initialized bot color number
     botColorNum = 0;
-
+    //  set time stamp
+    timeStamp = ofGetUnixTime();
+    
+    //  set up message queue thread
+//    zmqThread = ZMQThreadedObject("5555");
+    zmqThread.start();
+    
 	#ifdef _USE_LIVE_VIDEO
 
         vidGrabber.setVerbose(true);
@@ -74,7 +77,6 @@ void testApp::setup(){
     gui.add(autoFindBots.setup("Auto Find", false));
 
     gui.add(infoLabel.setup("Displayed Information\n", ""));
-    gui.add(showReticle.setup("Show Reticle", true));
     gui.add(drawReportStringToggle.setup("Info Table", true));
     gui.add(drawBotRectToggle.setup("Rectangles", false));
     gui.add(drawBotIDToggle.setup("ID", false));
@@ -93,17 +95,11 @@ void testApp::setup(){
     showSubtractedImage.addListener(this, &testApp::showSubtractedPressed);
 
     showGUI = false;
-
-    //  TCP server thread setup
-    tcpThread.start();
-
-    //  start sender
-    portNumber = 11235;
-    sender.setup("localhost", portNumber);
 }
 
 //--------------------------------------------------------------
-void testApp::update(){
+void testApp::update()
+{
     bool bNewFrame = false;
 
 	#ifdef _USE_LIVE_VIDEO
@@ -114,7 +110,8 @@ void testApp::update(){
         bNewFrame = vidPlayer.isFrameNew();
 	#endif
 
-	if (bNewFrame){
+	if (bNewFrame)
+    {
 
 		#ifdef _USE_LIVE_VIDEO
             colorImg.setFromPixels(vidGrabber.getPixels(), vidSize.x, vidSize.y);
@@ -123,7 +120,8 @@ void testApp::update(){
         #endif
 
         grayImage = colorImg;
-		if (bLearnBakground == true){
+		if (bLearnBakground == true)
+        {
 			grayBg = grayImage;		// the = sign copys the pixels from grayImage into grayBg
             bots.clear();
 			bLearnBakground = false;
@@ -136,8 +134,6 @@ void testApp::update(){
         //  dilate the blobs on the screen; compensating for blob-splitting by lines on grid
         for (int i = 0; i < dilateSlider; i++)
             grayDiff.dilate();
-//        for (int i = 0; i < dilateSlider / 2; i++)
-//            grayDiff.erode();
 
 		// find contours which are between the size of 1/300 pixels and 1/3 the w*h pixels.
 		contourFinder.findContours(grayDiff,
@@ -148,50 +144,54 @@ void testApp::update(){
 
         //  get all the blobs found in the contourFinder
         blobs = vector<ofxCvBlob>(contourFinder.blobs.begin(), contourFinder.blobs.end());
-
+        
+        line = ofPolyline();
+        for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
+        {
+            line.addVertex(it->second.get_center());
+        }
+        
+        
         //  if the contourFinder didn't find any blobs, remove all the bots stored.
-        if (blobs.size() == 0){
+        if (blobs.size() == 0)
+        {
             bots.clear();
             potential_bot_id = 0;
             botColorNum = 0;
-        }
-
-        else{
-            long time = ofGetElapsedTimeMillis() / 1000;
-            if (time - prev_time >= 0) {
-                prev_time = time;
+        } else
+        {
+            unsigned int time = ofGetUnixTime();
+            if (1) {
+                timeStamp = time;
                 //  vector iterator that will contain the pointer to the beginning of blobs
                 vector<ofxCvBlob>::iterator vect_it;
                 //  remove any elements that may resise in black_list
                 black_list.clear();
                 //  updated the positions of the blobs
-                for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++) {
+                for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
+                {
                     //  this will contain the offset of one pointer to the pointer of first element
                     offset = it->second.update_position(blobs);
                     vect_it = blobs.begin();
                     std::advance(vect_it, offset);
-                    if (offset != -1){
+                    if (offset != -1)
+                    {
                         blobs.erase(vect_it);
-                        continue;
+                    } else
+                    {
+                        //  push key to bot that no longer exist
+                        black_list.push_back(it->first);
                     }
-                    //  push key to bot that no longer exist
-                    black_list.push_back(it->first);
                 }
 
-                bool clearAll = false;
                 //  if there are any keys in black_list, remove them from bots map
-                for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++){
+                for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++)
+                {
                     bots.erase(*it);
-                    clearAll = true;
                 }
-
-                if (clearAll) {
-                    ofxOscMessage msg;
-                    msg.setAddress("/clear");
-                    msg.addStringArg("bye");
-                    sender.sendMessage(msg);
-                }
-                if (autoFindBots) {
+                
+                if (autoFindBots)
+                {
                     //  insert newly-found blobs, if there are any
                     for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++){
                         bots.insert(pair<int, Bot>(potential_bot_id, Bot(*it, potential_bot_id, colors[botColorNum])));
@@ -200,7 +200,6 @@ void testApp::update(){
                     }
                 }
             }
-
         }
 	}
     switch (vidID) {
@@ -231,6 +230,16 @@ void testApp::update(){
 void testApp::draw(){
 	ofBackground(100,100,100);
     displayedImage.draw(0,0);
+//    ofBeginShape();
+//    ofSetColor(ofColor::seaGreen);
+//        for (int i = 0; i < line.getVertices().size(); i++)
+//        {
+//            ofVertex(line.getVertices().at(i));
+//        }
+//    ofEndShape();
+//    ofSetColor(ofColor::white);
+//    line.close();
+//    line.draw();
     // Create a String stream that will be used to display various information.
     stringstream reportStr;
     if (drawReportStringToggle){
@@ -238,7 +247,7 @@ void testApp::draw(){
                     << "press ' ' to capture bg" << endl
                     << "number of bots found " << bots.size()
                     << ", fps: " << ofGetFrameRate() << endl << endl
-                    << "Bot:\t(x,y)\tdir\tangle\tvel" << endl;
+                    << "Bot:\t(x,y)\tvel" << endl;
         ofDrawBitmapString(reportStr.str(), displayedImage.width, 20);
         reportStr.str("");
     }
@@ -253,18 +262,17 @@ void testApp::draw(){
 
         //  draw path of bot
         if (drawBotPathToggle)
-            drawPath(it->second.path);
+            it->second.path.draw();
 
 
         //  draw blob and bounding rectangle
-        if (drawBotRectToggle){
+        if (drawBotRectToggle)
+        {
             ofNoFill();
             ofSetLineWidth(4);
             ofRect(it->second.rect);
             it->second.get_blob().draw();
         }
-
-
 
         ofFill();
 
@@ -272,15 +280,20 @@ void testApp::draw(){
         bot_center_pt = it->second.get_center();
         //  add bot information to string stream
         ofSetColor(it->second.color);
-        if (drawReportStringToggle) {
+        
+        if (drawReportStringToggle)
+        {
             drawInfoStrings(it->second.infoString(), info);
+            
             //  draw associating lines from bot to information tuple
-            if (drawAssociationToggle) {
+            if (drawAssociationToggle)
+            {
                 ofSetColor(it->second.color);
                 drawAssociation(bot_center_pt, info);
             }
         }
-        else{
+        else
+        {
             ofSetWindowShape(displayedImage.width, displayedImage.height);
         }
 
@@ -294,19 +307,6 @@ void testApp::draw(){
     if (showGUI) {
         gui.setPosition(0, 0);
         gui.draw();
-    }
-
-    if(showReticle && !showGUI){
-        int x = 20,
-        x2 = 25,
-        n = 5,
-        r = 25;
-        ofSetColor(reticlColor);
-        ofSetLineWidth(5);
-        ofNoFill();
-        ofCircle(mouse_point.x, mouse_point.y, 30);
-
-        reticleRotationNum = (reticleRotationNum + 1) % 360;
     }
 
     //  Draw the label
@@ -323,9 +323,9 @@ void testApp::exit(){
     showBackgroundImage.removeListener(this, &testApp::showBGPressed);
     showSubtractedImage.removeListener(this, &testApp::showSubtractedPressed);
     cout << "listeners removed" << endl;
-    tcpThread.stop();
-    cout << "TCP Server stopped" << endl;
-
+    
+    zmqThread.stop();
+    cout << "ZMG thread stopped" << endl;
 }
 
 
@@ -351,13 +351,6 @@ void testApp::keyReleased(int key){
 void testApp::mouseMoved(int x, int y ){
     mouse_point.x = x;
     mouse_point.y = y;
-    reticlColor = ofColor::white;
-    for (map<int, Bot>::iterator bot_it = bots.begin(); bot_it != bots.end(); bot_it++) {
-        if (bot_it->second.rect.inside(mouse_point)) {
-            reticlColor = bot_it->second.color;
-            break;
-        }
-    }
 }
 
 //--------------------------------------------------------------
@@ -368,6 +361,7 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
     if (button == OF_MOUSE_BUTTON_1) {
+        ofSendMessage("Hello");
         //  Catch the Bot!
         for (vector<ofxCvBlob>::iterator blob_it = blobs.begin(); blob_it != blobs.end(); blob_it++) {
             if (blob_it->boundingRect.inside(x, y)) {
@@ -392,7 +386,7 @@ void testApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void testApp::gotMessage(ofMessage msg){
-    cout << "got the message" << endl;
+    cout << "got the message: \"" << msg.message << "\"" << endl;
 }
 
 //--------------------------------------------------------------
@@ -418,16 +412,6 @@ void testApp::showGrayPressed(){
 //--------------------------------------------------------------
 void testApp::showSubtractedPressed(){
     vidID = 3;
-}
-
-//--------------------------------------------------------------
-void testApp::drawPath(vector<ofPoint>& path){
-    ofBeginShape();
-        ofNoFill();
-        for (vector<ofPoint>::iterator path_it = path.begin(); path_it != path.end(); path_it++) {
-            ofVertex(path_it->x, path_it->y);
-        }
-    ofEndShape(false);
 }
 
 //--------------------------------------------------------------
