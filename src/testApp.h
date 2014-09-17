@@ -75,6 +75,9 @@ public:
     ofPolyline          line;
     
     ZMQThreadedObject   zmqThread;
+    
+    void                updateBotsOnZMQThread(int &isAbleToUpdate);
+    
     //--------------------------------------------------------------
     bool                showGUI;
 

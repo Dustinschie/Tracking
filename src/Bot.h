@@ -21,12 +21,14 @@ public:
     Bot(ofxCvBlob& a_blob, int bot_id, int r, int g, int b);
     Bot(ofxCvBlob& a_blob, int bot_id, ofColor a_color);
     
-    void update_position(ofxCvBlob& a_blob);
-    int update_position(vector<ofxCvBlob>& blobs);
+    void updatePosition(ofxCvBlob& a_blob);
+    int updatePosition(vector<ofxCvBlob>& blobs);
     
     string infoString();
-    ofPoint get_center();
-    ofxCvBlob get_blob();
+    ofPoint getCenter();
+    ofxCvBlob getBlob();
+    int getId();
+    unsigned int getTimeStamp();
     
 //    vector<ofPoint> path;
     ofPolyline path;
@@ -37,7 +39,7 @@ private:
     int my_id;
     int velocity;
     bool isNew;
-    int calculate_velocity(ofVec2f& pF, ofVec2f& p0, long tF, long t0);
+    int calculateVelocity(ofVec2f& pF, ofVec2f& p0, long tF, long t0);
     ofxCvBlob blob;
     unsigned int timeStamp;
     

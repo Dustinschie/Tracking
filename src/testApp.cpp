@@ -148,7 +148,7 @@ void testApp::update()
         line = ofPolyline();
         for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
         {
-            line.addVertex(it->second.get_center());
+            line.addVertex(it->second.getCenter());
         }
         
         
@@ -161,45 +161,44 @@ void testApp::update()
         } else
         {
             unsigned int time = ofGetUnixTime();
-            if (1) {
-                timeStamp = time;
-                //  vector iterator that will contain the pointer to the beginning of blobs
-                vector<ofxCvBlob>::iterator vect_it;
-                //  remove any elements that may resise in black_list
-                black_list.clear();
-                //  updated the positions of the blobs
-                for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
+            timeStamp = time;
+            //  vector iterator that will contain the pointer to the beginning of blobs
+            vector<ofxCvBlob>::iterator vect_it;
+            //  remove any elements that may resise in black_list
+            black_list.clear();
+            //  updated the positions of the blobs
+            for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
+            {
+                //  this will contain the offset of one pointer to the pointer of first element
+                offset = it->second.updatePosition(blobs);
+                vect_it = blobs.begin();
+                std::advance(vect_it, offset);
+                if (offset != -1)
                 {
-                    //  this will contain the offset of one pointer to the pointer of first element
-                    offset = it->second.update_position(blobs);
-                    vect_it = blobs.begin();
-                    std::advance(vect_it, offset);
-                    if (offset != -1)
-                    {
-                        blobs.erase(vect_it);
-                    } else
-                    {
-                        //  push key to bot that no longer exist
-                        black_list.push_back(it->first);
-                    }
-                }
-
-                //  if there are any keys in black_list, remove them from bots map
-                for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++)
+                    blobs.erase(vect_it);
+                } else
                 {
-                    bots.erase(*it);
-                }
-                
-                if (autoFindBots)
-                {
-                    //  insert newly-found blobs, if there are any
-                    for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++){
-                        bots.insert(pair<int, Bot>(potential_bot_id, Bot(*it, potential_bot_id, colors[botColorNum])));
-                        botColorNum = (botColorNum + 1) % 18;
-                        potential_bot_id++;
-                    }
+                    //  push key to bot that no longer exist
+                    black_list.push_back(it->first);
                 }
             }
+
+            //  if there are any keys in black_list, remove them from bots map
+            for (vector<int>::iterator it = black_list.begin(); it != black_list.end(); it++)
+            {
+                bots.erase(*it);
+            }
+            
+            if (autoFindBots)
+            {
+                //  insert newly-found blobs, if there are any
+                for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++){
+                    bots.insert(pair<int, Bot>(potential_bot_id, Bot(*it, potential_bot_id, colors[botColorNum])));
+                    botColorNum = (botColorNum + 1) % 18;
+                    potential_bot_id++;
+                }
+            }
+            zmqThread.setBots(bots);
         }
 	}
     switch (vidID) {
@@ -227,19 +226,20 @@ void testApp::update()
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){
+void testApp::draw()
+{
 	ofBackground(100,100,100);
     displayedImage.draw(0,0);
-//    ofBeginShape();
-//    ofSetColor(ofColor::seaGreen);
-//        for (int i = 0; i < line.getVertices().size(); i++)
-//        {
-//            ofVertex(line.getVertices().at(i));
-//        }
-//    ofEndShape();
-//    ofSetColor(ofColor::white);
-//    line.close();
-//    line.draw();
+    ofBeginShape();
+    ofSetColor(ofColor::seaGreen);
+        for (int i = 0; i < line.getVertices().size(); i++)
+        {
+            ofVertex(line.getVertices().at(i));
+        }
+    ofEndShape();
+    ofSetColor(ofColor::white);
+    line.close();
+    line.draw();
     // Create a String stream that will be used to display various information.
     stringstream reportStr;
     if (drawReportStringToggle){
@@ -271,13 +271,13 @@ void testApp::draw(){
             ofNoFill();
             ofSetLineWidth(4);
             ofRect(it->second.rect);
-            it->second.get_blob().draw();
+            it->second.getBlob().draw();
         }
 
         ofFill();
 
         //  create point at location of corresponding information tuple
-        bot_center_pt = it->second.get_center();
+        bot_center_pt = it->second.getCenter();
         //  add bot information to string stream
         ofSetColor(it->second.color);
         
@@ -317,7 +317,8 @@ void testApp::draw(){
 }
 
 //--------------------------------------------------------------
-void testApp::exit(){
+void testApp::exit()
+{
     showColorImage.removeListener(this, &testApp::showColorPressed);
     showGrayImage.removeListener(this, &testApp::showGrayPressed);
     showBackgroundImage.removeListener(this, &testApp::showBGPressed);
@@ -430,4 +431,9 @@ void testApp::drawAssociation(ofPoint& botCenter, ofPoint& pt){
     ofSetLineWidth(2);
     ofLine(p1, botCenter);
     ofCircle(botCenter, 10);
+}
+
+void testApp::updateBotsOnZMQThread(int &isAbleToUpdate)
+{
+    zmqThread.setBots(bots);
 }

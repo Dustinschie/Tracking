@@ -10,8 +10,14 @@
 #define __Tracking__ZMQThreadedObject__
 
 #include <iostream>
+
 #include "ofMain.h"
-#include <zmq.h>
+
+//#include <zmq.hpp>
+#include "zmq2.h"
+
+#include "Bot.h"
+
 #ifndef _WIN32
     #include <unistd.h>
 #else
@@ -19,22 +25,36 @@
 #endif
 
 
+
 using namespace std;
 
-typedef char byte;
+//typedef char byte;
+typedef short int byte;
 
 class ZMQThreadedObject: public ofThread
 {
 public:
     ZMQThreadedObject(string port, string ip = "*");
-    ZMQThreadedObject();
+    ZMQThreadedObject()
+    {
+        portAndIP = "tcp://*:5555";
+        //  Prepare our context and socket
+        zmq::context_t context(1);
+    }
     void start();
     void stop();
     void threadedFunction();
     
-
+    void setBots(map <int, Bot> &bots);
+    
 private:
-    string portAndIP;
+    
+    zmq::context_t  context;
+    string          portAndIP;
+    map<int, Bot>   bots;
+    
+    bool send(int value, int flags);
+    
 };
 
 #endif /* defined(__Tracking__ZMQThreadedObject__) */

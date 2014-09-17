@@ -20,7 +20,7 @@
 		5833D28518C6AA0A00F8EEDE /* Bot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5833D27C18C6AA0A00F8EEDE /* Bot.cpp */; };
 		5864AD82E20F15536D054EA3 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF49D76C45D5DB505A234880 /* ofxOscMessage.cpp */; };
 		5888850319BFD79A0011EA60 /* ZMQThreadedObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */; };
-		5888850819C01B440011EA60 /* libzmq.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5888850719C01B440011EA60 /* libzmq.3.dylib */; };
+		588C161819C0AE2C009904A7 /* libzmq.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 588C161719C0AE2C009904A7 /* libzmq.3.dylib */; };
 		5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC5DA1C87211D4F6377DA719 /* tinyxmlparser.cpp */; };
 		5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C88333E71C9457E441C33474 /* ofxButton.cpp */; };
 		62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63A47AC60FFAFC3BF093EC0F /* OscOutboundPacketStream.cpp */; };
@@ -150,10 +150,11 @@
 		5833D27D18C6AA0A00F8EEDE /* Bot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bot.h; sourceTree = "<group>"; };
 		5833D27E18C6AA0A00F8EEDE /* Chalkduster.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Chalkduster.ttf; sourceTree = "<group>"; };
 		5833D27F18C6AA0A00F8EEDE /* grid_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = grid_image.jpg; sourceTree = "<group>"; };
+		5854B8ED19C9E07C004AE4A3 /* zmq2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zmq2.h; sourceTree = "<group>"; };
 		586A8EC141BDFA82B3B0518C /* config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = config.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/config.h; sourceTree = SOURCE_ROOT; };
 		5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZMQThreadedObject.cpp; sourceTree = "<group>"; };
 		5888850219BFD79A0011EA60 /* ZMQThreadedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZMQThreadedObject.h; sourceTree = "<group>"; };
-		5888850719C01B440011EA60 /* libzmq.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libzmq.3.dylib; sourceTree = "<group>"; };
+		588C161719C0AE2C009904A7 /* libzmq.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libzmq.3.dylib; sourceTree = "<group>"; };
 		5928AA323F5C2690B06C837D /* UdpSocketWin.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = UdpSocketWin.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/win32/UdpSocketWin.cpp; sourceTree = SOURCE_ROOT; };
 		59626D03C690200AD4E8B3A6 /* ml.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ml.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/ml/ml.hpp; sourceTree = SOURCE_ROOT; };
 		5A59183C98FC5E69FC90F138 /* contrib.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = contrib.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/contrib/contrib.hpp; sourceTree = SOURCE_ROOT; };
@@ -305,7 +306,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5888850819C01B440011EA60 /* libzmq.3.dylib in Frameworks */,
+				588C161819C0AE2C009904A7 /* libzmq.3.dylib in Frameworks */,
 				E7F985F815E0DEA3003869B5 /* Accelerate.framework in Frameworks */,
 				E7E077E815D3B6510020DFD4 /* QTKit.framework in Frameworks */,
 				E4EB6799138ADC1D00A09F29 /* GLUT.framework in Frameworks */,
@@ -808,7 +809,7 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
-				5888850719C01B440011EA60 /* libzmq.3.dylib */,
+				588C161719C0AE2C009904A7 /* libzmq.3.dylib */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -831,6 +832,7 @@
 				5833D27C18C6AA0A00F8EEDE /* Bot.cpp */,
 				5888850219BFD79A0011EA60 /* ZMQThreadedObject.h */,
 				5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */,
+				5854B8ED19C9E07C004AE4A3 /* zmq2.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

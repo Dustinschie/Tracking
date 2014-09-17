@@ -42,7 +42,7 @@ Bot::Bot(ofxCvBlob& a_blob, int bot_id, ofColor a_color)
 }
 
 //--------------------------------------------------------------
-void Bot::update_position(ofxCvBlob& a_blob)
+void Bot::updatePosition(ofxCvBlob& a_blob)
 {
     blob = a_blob;
     rect = ofRectangle(blob.boundingRect);
@@ -52,7 +52,7 @@ void Bot::update_position(ofxCvBlob& a_blob)
 }
 
 //--------------------------------------------------------------
-int Bot::update_position(vector<ofxCvBlob>& blobs)
+int Bot::updatePosition(vector<ofxCvBlob>& blobs)
 {
     for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++)
     {
@@ -84,20 +84,20 @@ int Bot::update_position(vector<ofxCvBlob>& blobs)
 }
 
 //--------------------------------------------------------------
-ofPoint Bot::get_center()
+ofPoint Bot::getCenter()
 {
     return ofPoint(blob.centroid);
 }
 
 //--------------------------------------------------------------
-ofxCvBlob Bot::get_blob()
+ofxCvBlob Bot::getBlob()
 {
     return ofxCvBlob(blob);
 }
 
 
 //--------------------------------------------------------------
-int Bot::calculate_velocity(ofVec2f& pF, ofVec2f& p0,  long tF,  long t0)
+int Bot::calculateVelocity(ofVec2f& pF, ofVec2f& p0,  long tF,  long t0)
 {
     long delta_t = tF - t0;
     if (delta_t != 0)
@@ -107,6 +107,18 @@ int Bot::calculate_velocity(ofVec2f& pF, ofVec2f& p0,  long tF,  long t0)
     }
     return 0;
     
+}
+
+//--------------------------------------------------------------
+int Bot::getId()
+{
+    return my_id;
+}
+
+//--------------------------------------------------------------
+unsigned int Bot::getTimeStamp()
+{
+    return timeStamp;
 }
 
 //--------------------------------------------------------------
