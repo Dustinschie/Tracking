@@ -362,7 +362,7 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
     if (button == OF_MOUSE_BUTTON_1) {
-        ofSendMessage("Hello");
+//        ofSendMessage("Hello");
         //  Catch the Bot!
         for (vector<ofxCvBlob>::iterator blob_it = blobs.begin(); blob_it != blobs.end(); blob_it++) {
             if (blob_it->boundingRect.inside(x, y)) {
@@ -387,7 +387,7 @@ void testApp::windowResized(int w, int h){
 
 //--------------------------------------------------------------
 void testApp::gotMessage(ofMessage msg){
-    cout << "got the message: \"" << msg.message << "\"" << endl;
+//    cout << "got the message: \"" << msg.message << "\"" << endl;
 }
 
 //--------------------------------------------------------------

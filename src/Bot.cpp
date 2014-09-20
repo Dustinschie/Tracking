@@ -88,7 +88,6 @@ ofPoint Bot::getCenter()
 {
     return ofPoint(blob.centroid);
 }
-
 //--------------------------------------------------------------
 ofxCvBlob Bot::getBlob()
 {

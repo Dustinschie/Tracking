@@ -112,6 +112,14 @@ namespace zmq
             return socket_t::send(msg, flags);
         }
         
+        bool send(unsigned short value, int flags = 0)
+        {
+            zmq::message_t msg(sizeof(unsigned short));
+            memcpy(msg.data(), &value, sizeof(unsigned short));
+            return socket_t::send(msg, flags);
+        }
+        
+        
         /*
          n: expected number of frames, including separators
          */
@@ -161,6 +169,14 @@ namespace zmq
                 throw error_t();
             
             return *(static_cast<short*>(message.data()));
+        }
+        unsigned short recvAsUnsignedShort(int flags = 0)
+        {
+            zmq::message_t message;
+            if (!socket_t::recv(&message, flags))
+                throw error_t();
+            
+            return *(static_cast<unsigned short*>(message.data()));
         }
     private:
         Socket(const Socket&);

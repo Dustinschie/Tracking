@@ -28,8 +28,7 @@
 
 using namespace std;
 
-//typedef char byte;
-typedef short int byte;
+typedef unsigned char byte;
 
 class ZMQThreadedObject: public ofThread
 {
@@ -52,9 +51,11 @@ private:
     zmq::context_t  context;
     string          portAndIP;
     map<int, Bot>   bots;
+    queue<unsigned short> getBotsInformation();
+    byte* breakupTimeStamp();
+    byte* shortToByteArray(unsigned short theShort);
     
-    bool send(int value, int flags);
-    
+//    void breakTimeStamp(&timeStamp);
 };
 
 #endif /* defined(__Tracking__ZMQThreadedObject__) */
