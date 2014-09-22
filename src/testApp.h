@@ -12,6 +12,11 @@
 
 //#define _USE_LIVE_VIDEO
 
+#define SET_NEW_BACKGROUND 0
+#define SET_BEGIN_TRACKING 1
+#define SET_CAPTURE_NEW_BOT 2
+
+
 class testApp : public ofBaseApp{
 public:
     void setup();
@@ -45,36 +50,33 @@ public:
     ofxCvColorImage     displayedImage;
     ofxCvContourFinder 	contourFinder;
 
-    bool				bLearnBakground;
 
-
+    //  GUI: label
     string              label;
-
+    //  GUI: Array of color for Bots
+    
     ofColor             colors[18];
     ofPoint             mouse_point;
+    
     map<int, Bot>       bots;
     vector<ofxCvBlob>   blobs;
 
-    ofPoint             botIDLocation,
-                        botRectLocation,
-                        botCoordLocation,
-                        botPathLocation;
     ofVec2f             vidSize;
-
-    void                drawInfoStrings(string s,
-                                        ofPoint& info);
-    void                drawAssociation(ofPoint& botCenter, ofPoint& pt);
-
-    int                 offset,
-                        potential_bot_id,
-                        botColorNum;
+    bool                shouldSetNewBackGround,
+                        shouldBeginSendingBotInfo,
+                        shouldCaptureNewBot;
     //  vector that will contain the keys to bots that no longer exist
     vector<int>         black_list;
     
     
-    ofPolyline          line;
-    
     ZMQThreadedObject   zmqThread;
+    int                 potential_bot_id,
+                        botColorNum,
+                        newBotID;
+
+    void                drawInfoStrings(string s,
+                                        ofPoint& info);
+    void                drawAssociation(ofPoint& botCenter, ofPoint& pt);
     
     void                updateBotsOnZMQThread(int &isAbleToUpdate);
     
@@ -111,5 +113,4 @@ public:
     void                showSubtractedPressed();
 
     int                 vidID;
-    unsigned int        timeStamp;
 };

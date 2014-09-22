@@ -51,9 +51,10 @@ private:
     zmq::context_t  context;
     string          portAndIP;
     map<int, Bot>   bots;
-    queue<unsigned short> getBotsInformation();
-    byte* breakupTimeStamp();
-    byte* shortToByteArray(unsigned short theShort);
+    bool sendBotInformation(zmq::Socket &socket);
+    vector<byte> getBotsInformation();
+    vector<byte> breakupTimeStamp();
+    vector<byte> shortToByteVector(unsigned short theShort);
     
 //    void breakTimeStamp(&timeStamp);
 };

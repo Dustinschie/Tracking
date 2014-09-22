@@ -16,12 +16,13 @@ void testApp::setup()
     potential_bot_id = 0;
     //  initialized bot color number
     botColorNum = 0;
-    //  set time stamp
-    timeStamp = ofGetUnixTime();
     
     //  set up message queue thread
-//    zmqThread = ZMQThreadedObject("5555");
     zmqThread.start();
+    
+    //  initialize control booleans
+    shouldBeginSendingBotInfo = shouldCaptureNewBot = shouldSetNewBackGround = false;
+    shouldSetNewBackGround = true;
     
 	#ifdef _USE_LIVE_VIDEO
 
@@ -67,8 +68,6 @@ void testApp::setup()
     colors[17] =ofColor::purple;
 
 
-	bLearnBakground = true;
-
     // GUI setup
     gui.setup();
     gui.add(alterationsLabel.setup("Alternations\n", ""));
@@ -112,6 +111,7 @@ void testApp::update()
 
 	if (bNewFrame)
     {
+        
 
 		#ifdef _USE_LIVE_VIDEO
             colorImg.setFromPixels(vidGrabber.getPixels(), vidSize.x, vidSize.y);
@@ -120,11 +120,11 @@ void testApp::update()
         #endif
 
         grayImage = colorImg;
-		if (bLearnBakground == true)
+		if (shouldSetNewBackGround == true)
         {
 			grayBg = grayImage;		// the = sign copys the pixels from grayImage into grayBg
             bots.clear();
-			bLearnBakground = false;
+			shouldSetNewBackGround = false;
 		}
 
 		// take the abs value of the difference between background and incoming and then threshold:
@@ -134,7 +134,8 @@ void testApp::update()
         //  dilate the blobs on the screen; compensating for blob-splitting by lines on grid
         for (int i = 0; i < dilateSlider; i++)
             grayDiff.dilate();
-
+        
+        
 		// find contours which are between the size of 1/300 pixels and 1/3 the w*h pixels.
 		contourFinder.findContours(grayDiff,
                                    (colorImg.height * colorImg.width)/300,
@@ -144,24 +145,16 @@ void testApp::update()
 
         //  get all the blobs found in the contourFinder
         blobs = vector<ofxCvBlob>(contourFinder.blobs.begin(), contourFinder.blobs.end());
-        
-        line = ofPolyline();
-        for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
-        {
-            line.addVertex(it->second.getCenter());
-        }
-        
-        
+    
         //  if the contourFinder didn't find any blobs, remove all the bots stored.
         if (blobs.size() == 0)
         {
             bots.clear();
             potential_bot_id = 0;
             botColorNum = 0;
-        } else
+        }
+        else
         {
-            unsigned int time = ofGetUnixTime();
-            timeStamp = time;
             //  vector iterator that will contain the pointer to the beginning of blobs
             vector<ofxCvBlob>::iterator vect_it;
             //  remove any elements that may resise in black_list
@@ -170,16 +163,17 @@ void testApp::update()
             for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
             {
                 //  this will contain the offset of one pointer to the pointer of first element
-                offset = it->second.updatePosition(blobs);
+                int offset = it->second.updatePosition(blobs);
                 vect_it = blobs.begin();
                 std::advance(vect_it, offset);
-                if (offset != -1)
-                {
-                    blobs.erase(vect_it);
-                } else
+                if (offset == -1)
                 {
                     //  push key to bot that no longer exist
                     black_list.push_back(it->first);
+                }
+                else
+                {
+                    blobs.erase(vect_it);
                 }
             }
 
@@ -189,16 +183,31 @@ void testApp::update()
                 bots.erase(*it);
             }
             
-            if (autoFindBots)
+            if (shouldCaptureNewBot)
+            {
+                if (blobs.size() > 0)
+                {
+                    bots.insert(pair<int, Bot>(newBotID, Bot(*blobs.begin(), newBotID, colors[botColorNum])));
+                    botColorNum = (botColorNum + 1) % 18;
+                    shouldCaptureNewBot = false;
+                }
+            }
+            else if (autoFindBots)
             {
                 //  insert newly-found blobs, if there are any
-                for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++){
+                for (vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++)
+                {
                     bots.insert(pair<int, Bot>(potential_bot_id, Bot(*it, potential_bot_id, colors[botColorNum])));
                     botColorNum = (botColorNum + 1) % 18;
                     potential_bot_id++;
                 }
             }
-            zmqThread.setBots(bots);
+            
+            if (shouldBeginSendingBotInfo)
+            {
+                zmqThread.setBots(bots);
+            }
+            
         }
 	}
     switch (vidID) {
@@ -230,19 +239,10 @@ void testApp::draw()
 {
 	ofBackground(100,100,100);
     displayedImage.draw(0,0);
-    ofBeginShape();
-    ofSetColor(ofColor::seaGreen);
-        for (int i = 0; i < line.getVertices().size(); i++)
-        {
-            ofVertex(line.getVertices().at(i));
-        }
-    ofEndShape();
-    ofSetColor(ofColor::white);
-    line.close();
-    line.draw();
     // Create a String stream that will be used to display various information.
     stringstream reportStr;
-    if (drawReportStringToggle){
+    if (drawReportStringToggle)
+    {
         reportStr   << "3Pi Tracking" << endl
                     << "press ' ' to capture bg" << endl
                     << "number of bots found " << bots.size()
@@ -334,7 +334,7 @@ void testApp::exit()
 void testApp::keyPressed(int key){
 	switch (key){
 		case ' ':
-			bLearnBakground = true;
+			shouldSetNewBackGround = true;
             bots.clear();
 			break;
         case 'g':
@@ -386,8 +386,25 @@ void testApp::windowResized(int w, int h){
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-//    cout << "got the message: \"" << msg.message << "\"" << endl;
+void testApp::gotMessage(ofMessage msg)
+{
+    string m = msg.message;
+    short toDo = (short)((unsigned char)m[0]);
+        
+    switch (toDo) {
+        case SET_NEW_BACKGROUND:
+            shouldSetNewBackGround = true;
+            break;
+        case SET_BEGIN_TRACKING:
+            shouldBeginSendingBotInfo = !shouldBeginSendingBotInfo;
+            break;
+        case SET_CAPTURE_NEW_BOT:
+            newBotID = (int)((unsigned char)m[1]);
+            shouldCaptureNewBot = true;
+            break;
+        default:
+            break;
+    }
 }
 
 //--------------------------------------------------------------

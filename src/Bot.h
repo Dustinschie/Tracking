@@ -30,6 +30,7 @@ public:
     int getId();
     unsigned int getTimeStamp();
     
+    
 //    vector<ofPoint> path;
     ofPolyline path;
     ofColor color;
