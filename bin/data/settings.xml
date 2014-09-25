@@ -1,0 +1,16 @@
+<group>
+	<Alternations
+/>
+	<Threshold>45</Threshold>
+	<Dilation>4</Dilation>
+	<Auto_Find>0</Auto_Find>
+	<Displayed_Information
+/>
+	<Info_Table>1</Info_Table>
+	<Rectangles>0</Rectangles>
+	<ID>0</ID>
+	<Path>0</Path>
+	<Association>1</Association>
+	<Image
+/>
+</group>

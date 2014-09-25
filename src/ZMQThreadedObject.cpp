@@ -9,6 +9,12 @@
 #include "ZMQThreadedObject.h"
 
 //#define VERBOSE
+#define RESET_BG 0
+#define START_TRACKING 1
+#define ADD_BOT 2
+#define GATHER_DIMENSIONS 3
+#define OBTAIN_POSITION 4
+#define GET_ALL_INFO 5
 
 
 void ZMQThreadedObject::start()
@@ -35,34 +41,77 @@ void ZMQThreadedObject::threadedFunction()
     while (isThreadRunning())
     {
         //  Wait for next request from client
-        ofSendMessage(socket.recvAsString());
+        string received = socket.recvAsString();
+        ofSendMessage(received);
+
         
 #ifdef VERBOSE
         std::cout << "Received: " << received << std::endl;
 #endif
-        ofSleepMillis(delay * 1000);
-        sendBotInformation(socket);
+//        ofSleepMillis(delay * 1000);
+        sendBotInformation(socket, received[0] - '0', received.size() > 1 ? received[1] - '0' : -1);
     }
 }
 
-bool ZMQThreadedObject::sendBotInformation(zmq::Socket &socket)
+bool ZMQThreadedObject::sendBotInformation(zmq::Socket &socket, int messageKey, int roboID)
 {
     if(lock())
     {
-        vector<byte>info = getBotsInformation();
-        unsigned char sendingInfo[info.size()];
-        std::copy(info.begin(), info.end(), sendingInfo);
+//#define RESET_BG 0
+//#define START_TRACKING 1
+//#define ADD_BOT 2
+//#define GATHER_DIMENSIONS 3
+//#define OBTAIN_POSITION 4
+//#define GET_ALL_INFO 5
+        byte id = messageKey;
+        switch (messageKey) {
+            case RESET_BG:
+            case START_TRACKING:
+            {
+                byte info = messageKey;
+                startTime = ofGetElapsedTimeMillis();
+                socket.send(info);
+                break;
+            }
+            case ADD_BOT:
+            {
+                byte info[9];
+                info[0] = id;
+                info[1] = roboID;
+                Bot bot = bots[roboID];
+                ofPoint center = bot.getCenter();
+                info[2] = (byte)((unsigned short)center.x);
+                info[3] = (byte)((unsigned int)center.x >> 8);
+                info[4] = (byte)((unsigned short)center.y);
+                info[5] = (byte)((unsigned int)center.y >> 8);
+                info[6] = (byte)((unsigned short)center.z);
+                info[7] = (byte)((unsigned int)center.z >> 8);
+                info[8] = (byte)((unsigned short)bot.getRadius());
+                socket.sendByteArray(info, 9);
+                break;
+            }
+            case OBTAIN_POSITION:
+            {
+                vector<byte>info = getBotsInformation();
+                unsigned char sendingInfo[info.size()];
+                std::copy(info.begin(), info.end(), sendingInfo);
 #ifdef VERBOSE
-        for (int i = 0; i < info.size(); i++)
-        {
-            cout << "\t"<< bitset<8>(sendingInfo[i]) << "\t" << (short)sendingInfo[i] << "\n";
-            
-        }
-        
-        cout << "\t|" << info.size() <<"\t" << (info[info.size() - 1] == 0) << endl;
-        cout << "Sending: "<< sendingInfo << endl;
+                for (int i = 0; i < info.size(); i++)
+                {
+                    cout << "\t"<< bitset<8>(sendingInfo[i]) << "\t" << (short)sendingInfo[i] << "\n";
+                    
+                }
+                
+                cout << "\t|" << info.size() <<"\t" << (info[info.size() - 1] == 0) << endl;
+                cout << "Sending: "<< sendingInfo << endl;
 #endif
-        socket.sendByteArray(sendingInfo, info.size());
+                socket.sendByteArray(sendingInfo, info.size());
+                break;
+            }
+            default:
+                break;
+        }
+
         
         unlock();
     }
@@ -116,7 +165,8 @@ vector<byte> ZMQThreadedObject::shortToByteVector(unsigned short theShort)
 
 vector<byte> ZMQThreadedObject::breakupTimeStamp()
 {
-    unsigned int time = ofGetUnixTime();
+    unsigned int time = (unsigned int)(ofGetElapsedTimeMillis() - startTime);
+    
     vector<byte> brokenTime;
     for (int i = 0; i < 4; i++) {
         brokenTime.insert(brokenTime.begin(), (byte)time);
@@ -131,6 +181,28 @@ void ZMQThreadedObject::setBots(map<int, Bot> &aBots)
     {
         bots.clear();
         bots = map<int, Bot>(aBots.begin(), aBots.end());
+        int sigmaRad = 0;
+        for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
+        {
+            ofPoint dim = it->second.getSize();
+            if (dim.x > dim.y)
+            {
+                sigmaRad += dim.x;
+            } else
+            {
+                sigmaRad += dim.y;
+            }
+        }
+        sigmaRad /= bots.size();
+        averageRadius = sigmaRad;
         this->unlock();
+    }
+}
+
+void ZMQThreadedObject::setFrameDimensions(ofPoint& dim)
+{
+    if(this->lock())
+    {
+        dimensions = ofPoint(dim);
     }
 }

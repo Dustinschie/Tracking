@@ -119,7 +119,21 @@ unsigned int Bot::getTimeStamp()
 {
     return timeStamp;
 }
-
+//--------------------------------------------------------------
+ofPoint Bot::getSize()
+{
+    int h = (int)(blob.boundingRect.height + 0.5),
+        w = (int)(blob.boundingRect.width + 0.5);
+    return ofPoint(w, h);
+}
+//--------------------------------------------------------------
+int Bot::getRadius()
+{
+    ofPoint size = getSize();
+    if (size.x > size.y)
+        return size.x;
+    return size.y;
+}
 //--------------------------------------------------------------
 string Bot::infoString()
 {

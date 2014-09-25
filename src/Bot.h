@@ -24,10 +24,12 @@ public:
     void updatePosition(ofxCvBlob& a_blob);
     int updatePosition(vector<ofxCvBlob>& blobs);
     
-    string infoString();
-    ofPoint getCenter();
-    ofxCvBlob getBlob();
-    int getId();
+    string      infoString();
+    ofPoint     getCenter();
+    ofxCvBlob   getBlob();
+    ofPoint     getSize();
+    int         getRadius();
+    int         getId();
     unsigned int getTimeStamp();
     
     
