@@ -1,9 +1,9 @@
 #3Pi Tracking
 
-##App Controls
+##GUI App Controls
 * Use you mouse to select bots
 * Press ' '<Space> to capture a new background
-* Press 'G' to open the menu for all sorts of goodies
+* Press 'g' —for GUI— to open the menu for all sorts of goodies
 
 ##Messageing Protocol
 
