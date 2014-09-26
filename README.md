@@ -5,8 +5,9 @@
 * Press ' '<Space> to capture a new background
 * Press 'G' to open the menu for all sorts of goodies
 
+##Messageing Protocol
 
-##Byte LEGEND
+###Byte LEGEND
 * i:  message indicator
 * r:  robot ID
 * R:  robot radius
@@ -16,19 +17,15 @@
 * y:  y byte
 * z:  z byte
 
-##MESSAGE INFORMATION FROM CLIENT
-* 0:  NEW BG                => i
+###MESSAGE INFORMATION FROM CLIENT
+| Number | Definition       | Byte Sequence |
+| ------:|:---------------- |:------------- |
+| 0      | New Background   | i             |
+| 1      | Toggle Tracking  | i             |
+| 2      | Add Robot        | ir            |
+| 3      | Wordl Dimensions | i             |
 
-* 1:  START TRACKING        => i
-
-* 2:  ADD BOT:  2           => ir
-
-* 3:  Dim                   => i
-
-* 4:  Cur_pos               => i
-
-
-##MESSAGE INFORMATION FROM SERVER
+###MESSAGE INFORMATION FROM SERVER
 * 0:  NEW BG                => i
 
 * 1:  START TRACKING        => i
