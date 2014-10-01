@@ -1,6 +1,4 @@
 #include "testApp.h"
-
-
 //--------------------------------------------------------------
 void testApp::setup()
 {
@@ -18,7 +16,9 @@ void testApp::setup()
     botColorNum = 0;
     
     //  set up message queue thread
+    cout << "setting up ZMQ thread" << endl;
     zmqThread.start();
+
     
     //  initialize control booleans
     shouldBeginSendingBotInfo = shouldCaptureNewBot = shouldSetNewBackGround = false;
@@ -209,6 +209,10 @@ void testApp::update()
             }
             
         }
+        ofPoint size;
+        size.x = colorImg.width;
+        size.y = colorImg.height;
+        zmqThread.setFrameDimensions(size);
 	}
     switch (vidID) {
         case 0:
@@ -389,22 +393,31 @@ void testApp::windowResized(int w, int h){
 void testApp::gotMessage(ofMessage msg)
 {
     string m = msg.message;
-    short toDo = (short)((unsigned char)m[0]);
-        
+    int toDo = m[0];
+    cout << "recieved: " << toDo << endl;
+    string info = "";
     switch (toDo) {
         case SET_NEW_BACKGROUND:
             shouldSetNewBackGround = true;
+            info = "new Background set";
             break;
         case SET_BEGIN_TRACKING:
             shouldBeginSendingBotInfo = !shouldBeginSendingBotInfo;
+            info = "Begin Tracking set";
             break;
         case SET_CAPTURE_NEW_BOT:
-            newBotID = (int)((unsigned char)m[1]);
+        {
+            newBotID = (int)(m[1]);
+            stringstream ss;
+            ss << "new bot set:\t" << newBotID;
+            info = ss.str();
             shouldCaptureNewBot = true;
             break;
+        }
         default:
             break;
     }
+    cout << info << endl;
 }
 
 //--------------------------------------------------------------

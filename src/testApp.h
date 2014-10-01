@@ -10,7 +10,7 @@
 #include "Bot.h"
 #include "ZMQThreadedObject.h"
 
-//#define _USE_LIVE_VIDEO
+#define _USE_LIVE_VIDEO
 
 #define SET_NEW_BACKGROUND 0
 #define SET_BEGIN_TRACKING 1

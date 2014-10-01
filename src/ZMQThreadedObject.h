@@ -45,18 +45,21 @@ public:
     void threadedFunction();
     
     void setBots(map <int, Bot> &bots);
-    
+    void setFrameDimensions(ofPoint& dim);
 private:
     
     zmq::context_t  context;
     string          portAndIP;
     map<int, Bot>   bots;
-    bool sendBotInformation(zmq::Socket &socket);
+    unsigned long long    elapsedMilliseconds, startTime;
+    ofPoint dimensions;
+    unsigned short averageRadius;
+    
+    bool sendBotInformation(zmq::Socket &socket, int messageKey, int roboID = -1);
     vector<byte> getBotsInformation();
     vector<byte> breakupTimeStamp();
     vector<byte> shortToByteVector(unsigned short theShort);
     
-//    void breakTimeStamp(&timeStamp);
 };
 
 #endif /* defined(__Tracking__ZMQThreadedObject__) */
