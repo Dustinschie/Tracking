@@ -1,61 +1,42 @@
 #3Pi Tracking
 
-##App Controls
+##GUI App Controls
 * Use you mouse to select bots
 * Press ' '<Space> to capture a new background
-* Press 'G' to open the menu for all sorts of goodies
+* Press 'g' —for GUI— to open the menu for all sorts of goodies
+
+##Messageing Protocol
+
+###Byte legend
+| Byte Var  | Definition         |
+| ---------:|:------------------ |
+| i         | Client Message ID  |
+| r         | Robot ID           |
+| R         | Robot Radius       |
+| n         | number of Robots   |
+| t         | Time Stamp byte    |
+| x         | Robot X Coord byte |
+| y         | Robot Y Coord byte |
+| z         | Robot Z Coord byte |
 
 
-Byte LEGEND
-–––––––––––
-  i:  message indicator
-  r:  robot ID
-  R:  robot radius
-  n:  number of robots
-  t:  timestamp byte
-  x:  x byte
-  y:  y byte
-  z:  z byte
+###Client Outgoing Message Reference
+| Number | Definition       | Byte Sequence |
+| ------:|:---------------- |:------------- |
+| 0      | New Background   | i             |
+| 1      | Toggle Tracking  | i             |
+| 2      | Add Robot        | ir            |
+| 3      | World Dimensions | i             |
+| 4      | Robot Positions  | i             |
 
-MESSAGE INFORMATION FROM CLIENT
-–––––––––––––––––––––––––––––––
-0:  NEW BG                => i
+###Server Outgoing Message Reference
+| Number | Definition       | Byte Sequence       |
+| ------:|:---------------- |:------------------- |
+| 0      | New Background   | i                   |
+| 1      | Toggle Tracking  | i                   |
+| 2      | Add Robot        | irxxyyzzR           |
+| 3      | World Dimensions | iwwhh               |
+| 4      | Robot Positions  | intttt{rxxyyzz * n} |
 
-1:  START TRACKING        => i
-
-2:  ADD BOT:  2           => ir
-
-3:  Dim                   => i
-
-4:  Cur_pos               => i
-
-
-MESSAGE INFORMATION FROM SERVER
-–––––––––––––––––––––––––––––––
-  0:  NEW BG                => i
-
-  1:  START TRACKING        => i
-
-  2:  ADD BOT:  9           => irxxyyzzR
-      id:       1 bytes
-      Robo_ID:  1 bytes
-      x:        2 bytes
-      y:        2 bytes
-      z:        2 bytes
-      rad:      1 bytes
-
-  3:  Dim:      5           => iwwhh
-      id:       1 bytes
-      width:    2 bytes
-      height:   2 bytes
-
-  4:  cur_Pos:  alot        => intttt{rxxyyzz * n} = 6 + 7 * n
-      id:       1 bytes
-      timestamp:4 bytes
-      loop
-       robo_id: 1 bytes
-       x:       2 bytes
-       y:       2 btyes
-       z:       2 bytes
-      endLoop
-
+####Details
+   * 6 + 7 * n
