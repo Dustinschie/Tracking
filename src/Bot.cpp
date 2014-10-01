@@ -132,7 +132,7 @@ int Bot::getRadius()
     ofPoint size = getSize();
     if (size.x > size.y)
         return size.x;
-    return size.y;
+    return size.y / 2;
 }
 //--------------------------------------------------------------
 string Bot::infoString()

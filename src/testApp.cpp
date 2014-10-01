@@ -16,7 +16,9 @@ void testApp::setup()
     botColorNum = 0;
     
     //  set up message queue thread
+    cout << "setting up ZMQ thread" << endl;
     zmqThread.start();
+
     
     //  initialize control booleans
     shouldBeginSendingBotInfo = shouldCaptureNewBot = shouldSetNewBackGround = false;
@@ -207,6 +209,10 @@ void testApp::update()
             }
             
         }
+        ofPoint size;
+        size.x = colorImg.width;
+        size.y = colorImg.height;
+        zmqThread.setFrameDimensions(size);
 	}
     switch (vidID) {
         case 0:
@@ -387,7 +393,7 @@ void testApp::windowResized(int w, int h){
 void testApp::gotMessage(ofMessage msg)
 {
     string m = msg.message;
-    int toDo = m[0] - '0';
+    int toDo = m[0];
     cout << "recieved: " << toDo << endl;
     string info = "";
     switch (toDo) {
@@ -401,7 +407,7 @@ void testApp::gotMessage(ofMessage msg)
             break;
         case SET_CAPTURE_NEW_BOT:
         {
-            newBotID = (int)(m[1] - '0');
+            newBotID = (int)(m[1]);
             stringstream ss;
             ss << "new bot set:\t" << newBotID;
             info = ss.str();

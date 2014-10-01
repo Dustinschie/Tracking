@@ -21,6 +21,7 @@
 		5864AD82E20F15536D054EA3 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DF49D76C45D5DB505A234880 /* ofxOscMessage.cpp */; };
 		5888850319BFD79A0011EA60 /* ZMQThreadedObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */; };
 		588C161819C0AE2C009904A7 /* libzmq.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 588C161719C0AE2C009904A7 /* libzmq.3.dylib */; };
+		58A99F8419D9B32400CD51B4 /* Encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58A99F8219D9B32400CD51B4 /* Encoder.cpp */; };
 		5A4349E9754D6FA14C0F2A3A /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC5DA1C87211D4F6377DA719 /* tinyxmlparser.cpp */; };
 		5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C88333E71C9457E441C33474 /* ofxButton.cpp */; };
 		62545D179C94265CA1389D4A /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63A47AC60FFAFC3BF093EC0F /* OscOutboundPacketStream.cpp */; };
@@ -155,6 +156,8 @@
 		5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZMQThreadedObject.cpp; sourceTree = "<group>"; };
 		5888850219BFD79A0011EA60 /* ZMQThreadedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZMQThreadedObject.h; sourceTree = "<group>"; };
 		588C161719C0AE2C009904A7 /* libzmq.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libzmq.3.dylib; sourceTree = "<group>"; };
+		58A99F8219D9B32400CD51B4 /* Encoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Encoder.cpp; sourceTree = "<group>"; };
+		58A99F8319D9B32400CD51B4 /* Encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Encoder.h; sourceTree = "<group>"; };
 		5928AA323F5C2690B06C837D /* UdpSocketWin.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = UdpSocketWin.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/win32/UdpSocketWin.cpp; sourceTree = SOURCE_ROOT; };
 		59626D03C690200AD4E8B3A6 /* ml.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ml.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/ml/ml.hpp; sourceTree = SOURCE_ROOT; };
 		5A59183C98FC5E69FC90F138 /* contrib.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = contrib.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/contrib/contrib.hpp; sourceTree = SOURCE_ROOT; };
@@ -519,6 +522,33 @@
 			name = gpu;
 			sourceTree = "<group>";
 		};
+		58A99F8519D9B34100CD51B4 /* Bot */ = {
+			isa = PBXGroup;
+			children = (
+				5833D27D18C6AA0A00F8EEDE /* Bot.h */,
+				5833D27C18C6AA0A00F8EEDE /* Bot.cpp */,
+			);
+			name = Bot;
+			sourceTree = "<group>";
+		};
+		58A99F8619D9B35600CD51B4 /* Encoder */ = {
+			isa = PBXGroup;
+			children = (
+				58A99F8319D9B32400CD51B4 /* Encoder.h */,
+				58A99F8219D9B32400CD51B4 /* Encoder.cpp */,
+			);
+			name = Encoder;
+			sourceTree = "<group>";
+		};
+		58A99F8719D9B35D00CD51B4 /* ZMQThreadedObject */ = {
+			isa = PBXGroup;
+			children = (
+				5888850219BFD79A0011EA60 /* ZMQThreadedObject.h */,
+				5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */,
+			);
+			name = ZMQThreadedObject;
+			sourceTree = "<group>";
+		};
 		641362CA659FAFEE4E81001B /* posix */ = {
 			isa = PBXGroup;
 			children = (
@@ -828,10 +858,9 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
-				5833D27D18C6AA0A00F8EEDE /* Bot.h */,
-				5833D27C18C6AA0A00F8EEDE /* Bot.cpp */,
-				5888850219BFD79A0011EA60 /* ZMQThreadedObject.h */,
-				5888850119BFD79A0011EA60 /* ZMQThreadedObject.cpp */,
+				58A99F8519D9B34100CD51B4 /* Bot */,
+				58A99F8619D9B35600CD51B4 /* Encoder */,
+				58A99F8719D9B35D00CD51B4 /* ZMQThreadedObject */,
 				5854B8ED19C9E07C004AE4A3 /* zmq2.h */,
 			);
 			path = src;
@@ -992,6 +1021,7 @@
 				72A929D3561B8232A182ABFC /* ofxOscBundle.cpp in Sources */,
 				5864AD82E20F15536D054EA3 /* ofxOscMessage.cpp in Sources */,
 				4ADB88E2FB52E76A471065DE /* ofxOscParameterSync.cpp in Sources */,
+				58A99F8419D9B32400CD51B4 /* Encoder.cpp in Sources */,
 				640279EE111671BD026CB013 /* ofxOscReceiver.cpp in Sources */,
 				8F5205AEF8861EF234F0651A /* ofxOscSender.cpp in Sources */,
 				ADE367465D2A8EBAD4C7A8D9 /* IpEndpointName.cpp in Sources */,

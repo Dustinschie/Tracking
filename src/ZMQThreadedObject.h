@@ -60,7 +60,6 @@ private:
     vector<byte> breakupTimeStamp();
     vector<byte> shortToByteVector(unsigned short theShort);
     
-//    void breakTimeStamp(&timeStamp);
 };
 
 #endif /* defined(__Tracking__ZMQThreadedObject__) */
