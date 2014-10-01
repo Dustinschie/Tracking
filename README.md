@@ -39,8 +39,4 @@
 | 4      | Robot Positions  | intttt{rxxyyzz * n} |
 
 ####Details
-<<<<<<< HEAD
    * 6 + 7 * n
-=======
-   * 6 + 7 * n
->>>>>>> Messageing-Protocol
