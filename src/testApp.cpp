@@ -206,6 +206,7 @@ void testApp::update()
             if (shouldBeginSendingBotInfo)
             {
                 zmqThread.setBots(bots);
+                zmqThread.setBlobs(blobs);
             }
             
         }
@@ -461,9 +462,4 @@ void testApp::drawAssociation(ofPoint& botCenter, ofPoint& pt){
     ofSetLineWidth(2);
     ofLine(p1, botCenter);
     ofCircle(botCenter, 10);
-}
-
-void testApp::updateBotsOnZMQThread(int &isAbleToUpdate)
-{
-    zmqThread.setBots(bots);
 }

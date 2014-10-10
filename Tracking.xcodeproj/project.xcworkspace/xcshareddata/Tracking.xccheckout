@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>A093AA95-A08E-456E-951E-B55AF1BC0042</string>
+	<string>8DF217B6-F100-4257-A875-703BF826A0EB</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Tracking</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>079A789F-5516-45E5-89ED-B5CE984A8696</key>
-		<string>https://github.com/Dustinschie/Tracking.git</string>
+		<key>4078F38E-D600-4969-BDFD-536BEF247F5C</key>
+		<string>https://github.com/dustinschie/Tracking.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Tracking.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>079A789F-5516-45E5-89ED-B5CE984A8696</key>
+		<key>4078F38E-D600-4969-BDFD-536BEF247F5C</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/Dustinschie/Tracking.git</string>
+	<string>https://github.com/dustinschie/Tracking.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>079A789F-5516-45E5-89ED-B5CE984A8696</string>
+	<string>4078F38E-D600-4969-BDFD-536BEF247F5C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>079A789F-5516-45E5-89ED-B5CE984A8696</string>
+			<string>4078F38E-D600-4969-BDFD-536BEF247F5C</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Tracking</string>
 		</dict>

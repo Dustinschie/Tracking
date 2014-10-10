@@ -12,11 +12,13 @@
 #include <iostream>
 
 #include "ofMain.h"
+#include "ofxOpenCv.h"
 
-//#include <zmq.hpp>
 #include "zmq2.h"
 
 #include "Bot.h"
+#include "Encoder.h"
+
 
 #ifndef _WIN32
     #include <unistd.h>
@@ -45,20 +47,21 @@ public:
     void threadedFunction();
     
     void setBots(map <int, Bot> &bots);
+    void setBlobs(vector<ofxCvBlob> &blobs);
     void setFrameDimensions(ofPoint& dim);
-private:
     
+private:
     zmq::context_t  context;
     string          portAndIP;
     map<int, Bot>   bots;
+    vector<ofxCvBlob> blobs;
     unsigned long long    elapsedMilliseconds, startTime;
     ofPoint dimensions;
     unsigned short averageRadius;
-    
+    Encoder encoder;
     bool sendBotInformation(zmq::Socket &socket, int messageKey, int roboID = -1);
     vector<byte> getBotsInformation();
-    vector<byte> breakupTimeStamp();
-    vector<byte> shortToByteVector(unsigned short theShort);
+    vector<byte> getBlobInformation(bool verbose);
     
 };
 

@@ -78,8 +78,6 @@ public:
                                         ofPoint& info);
     void                drawAssociation(ofPoint& botCenter, ofPoint& pt);
     
-    void                updateBotsOnZMQThread(int &isAbleToUpdate);
-    
     //--------------------------------------------------------------
     bool                showGUI;
 

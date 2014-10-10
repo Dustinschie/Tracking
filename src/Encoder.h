@@ -18,8 +18,9 @@ class Encoder
 {
 public:
     Encoder();
-    vector<byte> convertToByteVector(unsigned int bytes);
-    vector<byte> convertToByteVector(unsigned short bytes);
+    vector<byte> convertIntToByteVector(unsigned int bytes);
+    vector<byte> convertShortToByteVector(unsigned short bytes);
+    vector<byte> convertofPointToByteVector(ofPoint &point);
     
 };
 

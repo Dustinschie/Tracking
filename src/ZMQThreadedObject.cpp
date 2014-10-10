@@ -14,12 +14,13 @@
 #define ADD_BOT 2
 #define GATHER_DIMENSIONS 3
 #define OBTAIN_POSITIONS 4
-#define GET_ALL_INFO 5
+#define OBTAIN_BLOBS_INFO 5
 
 
 void ZMQThreadedObject::start()
 {
     startThread(false, false);
+    encoder = Encoder();
     
 }
 void ZMQThreadedObject::stop()
@@ -154,15 +155,16 @@ bool ZMQThreadedObject::sendBotInformation(zmq::Socket &socket, int messageKey, 
 vector<byte> ZMQThreadedObject::getBotsInformation()
 {
     vector<byte> info;
-    vector<byte> brokenTimeStamp = breakupTimeStamp();
+    unsigned int time = (unsigned int)(ofGetElapsedTimeMillis() - startTime);
+    vector<byte> brokenTimeStamp = encoder.convertIntToByteVector(time);
+    // push i
     info.push_back((byte)((unsigned short)OBTAIN_POSITIONS));
     // push number of bots
     info.push_back((byte)bots.size());
     // push time stamp
     info.insert(info.end(), brokenTimeStamp.begin(), brokenTimeStamp.end());
     
-    
-    
+
     //  push bot info
     for (map<int, Bot>::iterator it = bots.begin(); it != bots.end(); it++)
     {
@@ -174,9 +176,9 @@ vector<byte> ZMQThreadedObject::getBotsInformation()
         
         ofPoint p = b.getCenter();
         vector<byte> points[3];
-        points[0] = shortToByteVector((unsigned short) p.x);
-        points[1] = shortToByteVector((unsigned short) p.y);
-        points[2] = shortToByteVector((unsigned short) p.z);
+        points[0] = encoder.convertShortToByteVector((unsigned short) p.x);
+        points[1] = encoder.convertShortToByteVector((unsigned short) p.y);
+        points[2] = encoder.convertShortToByteVector((unsigned short) p.z);
         cout << p.x << "\t" << p.y << "\t" << p.z << "\t" << endl;
         
         //  push X, Y, Z coordinates
@@ -186,30 +188,54 @@ vector<byte> ZMQThreadedObject::getBotsInformation()
     
     return info;
 }
+
 //--------------------------------------------------------------
-vector<byte> ZMQThreadedObject::shortToByteVector(unsigned short theShort)
+// intttt{xxyyzzwwhh * n} or intttt{xxyyzzq{xxyyzz * q} * n}
+vector<byte> ZMQThreadedObject::getBlobInformation(bool verbose)
 {
-    vector<byte> byteVector;
-    byteVector.push_back((byte)(theShort >> 8));
-    byteVector.push_back((byte)theShort);
-
-
-
-    
-
-    return byteVector;
-}
-//--------------------------------------------------------------
-vector<byte> ZMQThreadedObject::breakupTimeStamp()
-{
+    vector<byte> bytes;
+    //  i
+    bytes.push_back((byte)OBTAIN_BLOBS_INFO);
+    //  n
+    bytes.push_back((byte)blobs.size());
+    //  tttt
     unsigned int time = (unsigned int)(ofGetElapsedTimeMillis() - startTime);
+    vector<byte> brokenTimeStamp = encoder.convertIntToByteVector(time);
+    bytes.insert(bytes.end(), brokenTimeStamp.begin(), brokenTimeStamp.end());
     
-    vector<byte> brokenTime;
-    for (int i = 0; i < 4; i++) {
-        brokenTime.insert(brokenTime.begin(), (byte)time);
-        time >>= 8;
+    // {xxyyzzwwhh * n} or {xxyyzzq{xxyy * q} * n}
+    for(vector<ofxCvBlob>::iterator it = blobs.begin(); it != blobs.end(); it++)
+    {
+        // xxyyzz
+        ofPoint center = it->centroid;
+        vector<byte> ctrPts = encoder.convertofPointToByteVector(center);
+        bytes.insert(bytes.end(), ctrPts.begin(), ctrPts.end());
+        
+        if(verbose)
+        {
+            
+            vector<ofPoint> points = it->pts;
+            //  q
+            bytes.push_back(points.size());
+            //  {xxyyzz * q}
+            for (vector<ofPoint>::iterator it = points.begin(); it != points.end(); it++)
+                vector<byte> pt = encoder.convertofPointToByteVector(*it);
+        }
+        else
+        {
+            // wwhh
+            ofRectangle rect = it->boundingRect;
+            vector<byte> size[2];
+            size[0] = encoder.convertShortToByteVector((unsigned short)rect.width);
+            size[1] = encoder.convertShortToByteVector((unsigned short)rect.height);
+            for (int i = 0; i < 2; i++)
+            {
+                vector<byte> temp = size[i];
+                bytes.insert(bytes.end(), temp.begin(), temp.end());
+            }
+        }
     }
-    return brokenTime;
+    return bytes;
 }
 
 #pragma mark - Setters for the main thread to use
@@ -247,13 +273,23 @@ void ZMQThreadedObject::setBots(map<int, Bot> &aBots)
         this->unlock();
     }
 }
+
+//--------------------------------------------------------------
+void ZMQThreadedObject::setBlobs(vector<ofxCvBlob> &someBlobs)
+{
+    if (this->lock()) {
+        blobs.clear();
+        blobs = vector<ofxCvBlob>(someBlobs.begin(), someBlobs.end());
+        this->unlock();
+    }
+}
 //--------------------------------------------------------------
 void ZMQThreadedObject::setFrameDimensions(ofPoint& dim)
 {
     if (this->lock()) {
 //        cout << "updated" << endl;
         dimensions = ofPoint(dim);
-        unlock();
+        this->unlock();
     }
 
 }
