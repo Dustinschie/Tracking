@@ -14,6 +14,7 @@
 #include "ofMain.h"
 #include "ofxOpenCv.h"
 
+#include "ofxZmq.h"
 #include "zmq2.h"
 
 #include "Bot.h"
@@ -45,11 +46,11 @@ public:
     void start();
     void stop();
     void threadedFunction();
-    
+
     void setBots(map <int, Bot> &bots);
     void setBlobs(vector<ofxCvBlob> &blobs);
     void setFrameDimensions(ofPoint& dim);
-    
+
 private:
     zmq::context_t  context;
     string          portAndIP;
@@ -62,7 +63,7 @@ private:
     bool sendBotInformation(zmq::Socket &socket, int messageKey, int roboID = -1);
     vector<byte> getBotsInformation();
     vector<byte> getBlobInformation(bool verbose);
-    
+
 };
 
 #endif /* defined(__Tracking__ZMQThreadedObject__) */

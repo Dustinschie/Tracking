@@ -1,5 +1,3 @@
 ofxGui
-ofxNetwork
 ofxOpenCv
-ofxOsc
-ofxXmlSettings
+ofxZmq

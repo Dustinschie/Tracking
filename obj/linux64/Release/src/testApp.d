@@ -26,6 +26,7 @@ obj/linux64/Release/src/testApp.o: src/testApp.cpp src/testApp.h \
  ../../../libs/poco/include/Poco/Mutex_POSIX.h \
  ../../../libs/openFrameworks/utils/ofSystemUtils.h \
  ../../../libs/openFrameworks/utils/ofThread.h \
+ ../../../libs/poco/include/Poco/AtomicCounter.h \
  ../../../libs/poco/include/Poco/Thread.h \
  ../../../libs/poco/include/Poco/Thread_POSIX.h \
  ../../../libs/poco/include/Poco/Runnable.h \
@@ -33,7 +34,6 @@ obj/linux64/Release/src/testApp.o: src/testApp.cpp src/testApp.h \
  ../../../libs/poco/include/Poco/Event.h \
  ../../../libs/poco/include/Poco/Event_POSIX.h \
  ../../../libs/poco/include/Poco/RefCountedObject.h \
- ../../../libs/poco/include/Poco/AtomicCounter.h \
  ../../../libs/poco/include/Poco/AutoPtr.h \
  ../../../libs/openFrameworks/utils/ofURLFileLoader.h \
  ../../../libs/openFrameworks/events/ofEvents.h \
@@ -135,6 +135,7 @@ obj/linux64/Release/src/testApp.o: src/testApp.cpp src/testApp.h \
  ../../../libs/openFrameworks/3d/of3dPrimitives.h \
  ../../../libs/openFrameworks/gl/ofMaterial.h \
  ../../../libs/openFrameworks/gl/ofShader.h \
+ ../../../libs/poco/include/Poco/RegularExpression.h \
  ../../../libs/openFrameworks/app/ofAppBaseWindow.h \
  ../../../libs/openFrameworks/gl/ofGLProgrammableRenderer.h \
  ../../../libs/openFrameworks/graphics/ofCairoRenderer.h \
@@ -376,28 +377,17 @@ obj/linux64/Release/src/testApp.o: src/testApp.cpp src/testApp.h \
  ../../../addons/ofxGui/src/ofxGuiGroup.h \
  ../../../addons/ofxGui/src/ofxButton.h \
  ../../../addons/ofxGui/src/ofxPanel.h \
- ../../../addons/ofxGui/src/ofxLabel.h \
- ../../../addons/ofxNetwork/src/ofxNetwork.h \
- ../../../addons/ofxNetwork/src/ofxTCPClient.h \
- ../../../addons/ofxNetwork/src/ofxTCPManager.h \
- ../../../addons/ofxNetwork/src/ofxTCPServer.h \
- ../../../addons/ofxNetwork/src/ofxUDPManager.h \
- ../../../addons/ofxOsc/src/ofxOscMessage.h \
- ../../../addons/ofxOsc/src/ofxOscArg.h src/Bot.h src/TCPThread.h \
- ../../../addons/ofxOsc/src/ofxOscParameterSync.h \
- ../../../addons/ofxOsc/src/ofxOscSender.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h \
- ../../../addons/ofxOsc/src/ofxOscBundle.h \
- ../../../addons/ofxOsc/src/ofxOscReceiver.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h \
- ../../../addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h \
- ../../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h \
- ../../../addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h \
- ../../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h
+ ../../../addons/ofxGui/src/ofxLabel.h src/Bot.h src/ZMQThreadedObject.h \
+ ../../../addons/ofxZmq/src/ofxZmq.h \
+ ../../../addons/ofxZmq/libs/zmq/include/zmq.hpp \
+ ../../../addons/ofxZmq/libs/zmq/include/zmq.h \
+ ../../../addons/ofxZmq/src/ofxZmqConfig.h \
+ ../../../addons/ofxZmq/src/ofxZmqSocket.h \
+ ../../../addons/ofxZmq/src/ofxZmqSubscriber.h \
+ ../../../addons/ofxZmq/src/ofxZmqPublisher.h \
+ ../../../addons/ofxZmq/src/ofxZmqRequest.h \
+ ../../../addons/ofxZmq/src/ofxZmqReply.h \
+ ../../../addons/ofxZmq/src/ofxZmqPair.h src/zmq2.h src/Encoder.h
 
 src/testApp.h:
 
@@ -455,6 +445,8 @@ src/testApp.h:
 
 ../../../libs/openFrameworks/utils/ofThread.h:
 
+../../../libs/poco/include/Poco/AtomicCounter.h:
+
 ../../../libs/poco/include/Poco/Thread.h:
 
 ../../../libs/poco/include/Poco/Thread_POSIX.h:
@@ -468,8 +460,6 @@ src/testApp.h:
 ../../../libs/poco/include/Poco/Event_POSIX.h:
 
 ../../../libs/poco/include/Poco/RefCountedObject.h:
-
-../../../libs/poco/include/Poco/AtomicCounter.h:
 
 ../../../libs/poco/include/Poco/AutoPtr.h:
 
@@ -672,6 +662,8 @@ src/testApp.h:
 ../../../libs/openFrameworks/gl/ofMaterial.h:
 
 ../../../libs/openFrameworks/gl/ofShader.h:
+
+../../../libs/poco/include/Poco/RegularExpression.h:
 
 ../../../libs/openFrameworks/app/ofAppBaseWindow.h:
 
@@ -1189,48 +1181,30 @@ src/testApp.h:
 
 ../../../addons/ofxGui/src/ofxLabel.h:
 
-../../../addons/ofxNetwork/src/ofxNetwork.h:
-
-../../../addons/ofxNetwork/src/ofxTCPClient.h:
-
-../../../addons/ofxNetwork/src/ofxTCPManager.h:
-
-../../../addons/ofxNetwork/src/ofxTCPServer.h:
-
-../../../addons/ofxNetwork/src/ofxUDPManager.h:
-
-../../../addons/ofxOsc/src/ofxOscMessage.h:
-
-../../../addons/ofxOsc/src/ofxOscArg.h:
-
 src/Bot.h:
 
-src/TCPThread.h:
+src/ZMQThreadedObject.h:
 
-../../../addons/ofxOsc/src/ofxOscParameterSync.h:
+../../../addons/ofxZmq/src/ofxZmq.h:
 
-../../../addons/ofxOsc/src/ofxOscSender.h:
+../../../addons/ofxZmq/libs/zmq/include/zmq.hpp:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h:
+../../../addons/ofxZmq/libs/zmq/include/zmq.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h:
+../../../addons/ofxZmq/src/ofxZmqConfig.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/OscTypes.h:
+../../../addons/ofxZmq/src/ofxZmqSocket.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/OscException.h:
+../../../addons/ofxZmq/src/ofxZmqSubscriber.h:
 
-../../../addons/ofxOsc/src/ofxOscBundle.h:
+../../../addons/ofxZmq/src/ofxZmqPublisher.h:
 
-../../../addons/ofxOsc/src/ofxOscReceiver.h:
+../../../addons/ofxZmq/src/ofxZmqRequest.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/OscPacketListener.h:
+../../../addons/ofxZmq/src/ofxZmqReply.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/OscReceivedElements.h:
+../../../addons/ofxZmq/src/ofxZmqPair.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/osc/../ip/PacketListener.h:
+src/zmq2.h:
 
-../../../addons/ofxOsc/libs/oscpack/src/ip/UdpSocket.h:
-
-../../../addons/ofxOsc/libs/oscpack/src/ip/NetworkingUtils.h:
-
-../../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h:
+src/Encoder.h:
