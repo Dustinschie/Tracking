@@ -10,7 +10,7 @@
 #include "Bot.h"
 #include "ZMQThreadedObject.h"
 
-#define _USE_LIVE_VIDEO
+//#define _USE_LIVE_VIDEO
 
 #define SET_NEW_BACKGROUND 0
 #define SET_BEGIN_TRACKING 1
@@ -56,7 +56,7 @@ public:
     //  GUI: Array of color for Bots
     
     ofColor             colors[18];
-    ofPoint             mouse_point;
+//    ofPoint             mouse_point;
     
     map<int, Bot>       bots;
     vector<ofxCvBlob>   blobs;

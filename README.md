@@ -1,12 +1,14 @@
 #3Pi Tracking
 
+
 ##GUI App Controls
 * Use you mouse to select bots
 * Press ' '<Space> to capture a new background
 * Press 'g' —for GUI— to open the menu for all sorts of goodies
 
-##Messageing Protocol
 
+
+##Messageing Protocol
 ###Byte legend
 | Byte Var  | Definition         |
 | ---------:|:------------------ |

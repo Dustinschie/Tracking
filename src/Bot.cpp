@@ -60,14 +60,6 @@ int Bot::updatePosition(vector<ofxCvBlob>& blobs)
         {
             unsigned int newTime = ofGetUnixTime();
             int t = newTime - timeStamp;
-            if (isNew)
-            {
-                velocity = 0.0;
-            }
-            else
-            {
-                velocity = abs(blob.centroid.distance(it->centroid));
-            }
             blob = *it;
             rect = blob.boundingRect;
             timeStamp = newTime;
@@ -139,7 +131,7 @@ string Bot::infoString()
 {
     stringstream ss;
     ofPoint centroid = blob.centroid;
-    ss << my_id << "\t" << (int)centroid.x << "," << (int)centroid.y << "\t" << velocity;
+    ss << my_id << "\t" << (int)centroid.x << "," << (int)centroid.y;
     string s = ss.str();
     ss.str("");
      return s;

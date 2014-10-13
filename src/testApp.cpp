@@ -7,7 +7,7 @@ void testApp::setup()
     vidSize = ofVec2f(640, 480);
     ofSetFrameRate(30);
     //  initialize mouse point
-    mouse_point = ofPoint(0,0);
+//    mouse_point = ofPoint(0,0);
     //  intialize video ID
     vidID = 0;
     //  initialize next Bot ID
@@ -23,7 +23,6 @@ void testApp::setup()
     //  initialize control booleans
     shouldBeginSendingBotInfo = shouldCaptureNewBot = shouldSetNewBackGround = false;
     shouldSetNewBackGround = true;
-    
 	#ifdef _USE_LIVE_VIDEO
 
         vidGrabber.setVerbose(true);
@@ -99,6 +98,7 @@ void testApp::setup()
 //--------------------------------------------------------------
 void testApp::update()
 {
+    ofShowCursor();
     bool bNewFrame = false;
 
 	#ifdef _USE_LIVE_VIDEO
@@ -250,9 +250,9 @@ void testApp::draw()
     {
         reportStr   << "3Pi Tracking" << endl
                     << "press ' ' to capture bg" << endl
-                    << "number of bots found " << bots.size()
-                    << ", fps: " << ofGetFrameRate() << endl << endl
-                    << "Bot:\t(x,y)\tvel" << endl;
+                    << "number of bots found " << bots.size() << endl
+                    << "fps: " << ofGetFrameRate() << endl
+                    << "Bot:\t(x,y)" << endl;
         ofDrawBitmapString(reportStr.str(), displayedImage.width, 20);
         reportStr.str("");
     }
@@ -355,8 +355,8 @@ void testApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-    mouse_point.x = x;
-    mouse_point.y = y;
+//    mouse_point.x = x;
+//    mouse_point.y = y;
 }
 
 //--------------------------------------------------------------
@@ -366,6 +366,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    cout << "press" << endl;
     if (button == OF_MOUSE_BUTTON_1) {
 //        ofSendMessage("Hello");
         //  Catch the Bot!
@@ -450,7 +451,7 @@ void testApp::showSubtractedPressed(){
 void testApp::drawInfoStrings(string s, ofPoint& info ){
     ofVec2f p1 = ofVec2f(info.x, info.y-6);
     ofCircle(p1, 5);
-    ofSetWindowShape(displayedImage.width + 300, displayedImage.height);
+    ofSetWindowShape(displayedImage.width + 200, displayedImage.height);
     ofRect(info.x, info.y-15, 300, 20);
     ofSetColor(ofColor::black);
     ofDrawBitmapString(s, info);

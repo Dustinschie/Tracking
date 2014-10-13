@@ -8,6 +8,7 @@
 
 #include "ZMQThreadedObject.h"
 
+
 #define VERBOSE
 #define RESET_BG 0
 #define START_TRACKING 1

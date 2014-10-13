@@ -31,16 +31,12 @@ public:
     int         getRadius();
     int         getId();
     unsigned int getTimeStamp();
-    
-    
-//    vector<ofPoint> path;
     ofPolyline path;
     ofColor color;
     ofRectangle rect;
     
 private:
     int my_id;
-    int velocity;
     bool isNew;
     int calculateVelocity(ofVec2f& pF, ofVec2f& p0, long tF, long t0);
     ofxCvBlob blob;
