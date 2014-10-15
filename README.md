@@ -9,9 +9,9 @@ An openFrameworks application that allows for remote tracking of autonomous robo
 This application depends on 3 openFrameworks:
 * ofxOpenCv
 * ofxGui
-* [ofxZmq](https://github.com/Dustinschie/ofxZmq)
-##Messageing Protocol
+* [ofxZmq](https://github.com/Dustinschie/ofxZmq) 
 
+##Messageing Protocol
 ###Byte legend
 | Byte Var  | Definition         |
 | ---------:|:------------------ |
