@@ -1,10 +1,15 @@
 #3Pi Tracking
-
+An openFrameworks application that allows for remote tracking of autonomous robots.
 ##GUI App Controls
 * Use you mouse to select bots
 * Press ' '<Space> to capture a new background
 * Press 'g' —for GUI— to open the menu for all sorts of goodies
 
+##Dependencies
+This application depends on 3 openFrameworks:
+* ofxOpenCv
+* ofxGui
+* [ofxZmq](https://github.com/Dustinschie/ofxZmq)
 ##Messageing Protocol
 
 ###Byte legend
